@@ -1,13 +1,20 @@
 [Unit]
-Description=Small description of the service
-After=network.target
+Description=GPodder
+After=network.target postgresql.service nginx.service redis.service __APP__.socket __APP__-celery.service __APP__-beat.service
+
 
 [Service]
-Type=simple
+Type=notify
 User=__APP__
 Group=__APP__
-WorkingDirectory=__FINALPATH__/
-ExecStart=__FINALPATH__/script >> /var/log/__APP__/__APP__.log 2>&1
+WorkingDirectory=__FINALPATH__
+
+ExecStart=__FINALPATH__/venv/bin/envdir __FINALPATH__/envs/prod __FINALPATH__/venv/bin/gunicorn -c __FINALPATH__/conf/gunicorn.conf.py mygpo.wsgi:application --bind /run/__APP__.sock
+ExecReload=/bin/kill -s HUP $MAINPID
+Restart=on-failure
+KillMode=mixed
+TimeoutStopSec=5
+PrivateTmp=true
 
 [Install]
 WantedBy=multi-user.target

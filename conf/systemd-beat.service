@@ -1,0 +1,20 @@
+[Unit]
+Description=GPodder-beat
+After=network.target postgresql.service redis.service
+
+
+[Service]
+Type=basic
+User=__APP__
+Group=__APP__
+WorkingDirectory=__FINALPATH__
+
+ExecStart=__FINALPATH__/venv/bin/envdir __FINALPATH__/envs/prod __FINALPATH__/venv/bin/celery -A __APP__ beat --pidfile /tmp/celerybeat.pid -S django
+ExecReload=/bin/kill -s HUP $MAINPID
+Restart=on-failure
+KillMode=mixed
+TimeoutStopSec=5
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

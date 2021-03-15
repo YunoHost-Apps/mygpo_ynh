@@ -1,0 +1,20 @@
+diff --git a/conf/gunicorn.conf.py b/conf/gunicorn.conf.py
+index c72ebeeb..cf0d5a3a 100644
+--- a/conf/gunicorn.conf.py
++++ b/conf/gunicorn.conf.py
+@@ -1,15 +1,11 @@
+ import multiprocessing
+ import os
+ 
+-bind = "unix:/tmp/mygpo.sock"
+ workers = multiprocessing.cpu_count()
+ 
+ # The maximum number of requests a worker will process before restarting.
+ # max_requests = 1000
+ 
+-errorlog = "/var/log/gunicorn/error.log"
+-accesslog = "/var/log/gunicorn/access.log"
+-loglevel = "info"
+ 
+ timeout = 120
+ graceful_timeout = 60
