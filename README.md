@@ -1,6 +1,6 @@
 # `mygpo` (gPodder.net) for YunoHost
 
-[![Integration level](https://dash.yunohost.org/integration/mygpo.svg)](https://dash.yunohost.org/appci/app/mygpo) ![](https://ci-apps.yunohost.org/ci/badges/mygpo.status.svg) ![](https://ci-apps.yunohost.org/ci/badges/mygpo.maintain.svg)
+[![Integration level](https://dash.yunohost.org/integration/mygpo.svg)](https://dash.yunohost.org/appci/app/mygpo) ![](https://ci-apps.yunohost.org/ci/badges/mygpo.status.svg) ![](https://ci-apps.yunohost.org/ci/badges/mygpo.maintain.svg)  
 [![Install mygpo with YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=mygpo)
 
 *[Lire ce readme en français.](./README_fr.md)*
@@ -32,8 +32,8 @@ Edit files under `/opt/yunohost/APPDIR/envs/prod` to set environment variables.
 
 #### Multi-user support
 
-Are LDAP and HTTP auth supported? **No**
-Can the app be used by multiple users? **Yes**
+* Are LDAP and HTTP auth supported? **No**
+* Can the app be used by multiple users? **Yes**
 
 #### Supported architectures
 
@@ -43,9 +43,6 @@ Can the app be used by multiple users? **Yes**
 ## Limitations
 
 * The feed-parsing service is not included, https://feeds.gpodder.net is used
-
-**More info on the documentation page:**
-https://yunohost.org/packaging_apps
 
 ## Links
 
