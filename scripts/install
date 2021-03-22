@@ -152,7 +152,9 @@ mkdir $datadir
 ynh_app_setting_set --app=$app --key=datadir --value="$datadir"
 
 # Give permission to the datadir
-chown -R "$app":"$app" "$datadir"
+chown -R $app:$app $datadir
+chmod o-rwx $datadir
+setfacl -n -R -m user:www-data:rx -m default:user:www-data:rx $datadir
 
 
 ynh_app_setting_set --app=$app --key=datadir --value="$datadir"
@@ -165,7 +167,7 @@ ynh_script_progression --message="Setting up envdir..." --weight=1
 
 env_path=$final_path/envs/prod
 
-mkdir -p  $env_path
+mkdir -p $env_path
 
 echo "$admin <$admin_email>" > $env_path/ADMINS
 echo "None" > $env_path/BROKER_POOL_LIMIT
@@ -189,8 +191,8 @@ pushd $final_path || ynh_die
 	python3 -m venv $final_path/venv
 	source $final_path/venv/bin/activate
 	python3 -m pip install -U wheel pip setuptools
-	python3 -m pip install --requirement  $final_path/requirements.txt
-	python3 -m pip install --requirement  $final_path/requirements-setup.txt
+	python3 -m pip install --requirement $final_path/requirements.txt
+	python3 -m pip install --requirement $final_path/requirements-setup.txt
 	deactivate 'dummy_arg'
 popd || ynh_die
 
@@ -240,7 +242,11 @@ systemctl daemon-reload --quiet
 ### that really need such authorization.
 
 # Set permissions to app files
-chown -R root: $final_path
+chown -R root:$app $final_path
+chmod -R o-rwx $final_path
+chmod -R g-w $final_path
+setfacl -n -R -m user:www-data:rx -m default:user:www-data:rx $final_path
+setfacl -n -R -m user:www-data:- -m default:user:www-data:- $final_path/envs
 
 #=================================================
 # INTEGRATE SERVICE IN YUNOHOST

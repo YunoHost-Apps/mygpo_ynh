@@ -19,6 +19,7 @@ app=$YNH_APP_INSTANCE_NAME
 domain=$(ynh_app_setting_get --app=$app --key=domain)
 path_url=$(ynh_app_setting_get --app=$app --key=path)
 final_path=$(ynh_app_setting_get --app=$app --key=final_path)
+datadir=$(ynh_app_setting_get --app=$app --key=datadir)
 
 #=================================================
 # CHECK VERSION
@@ -108,8 +109,8 @@ ynh_script_progression --message="Upgrading Python virtualenv..." --weight=2
 pushd $final_path || ynh_die
 	source $final_path/venv/bin/activate
 	python3 -m pip install -U wheel pip setuptools
-	python3 -m pip install -U --requirement  $final_path/requirements.txt
-	python3 -m pip install -U --requirement  $final_path/requirements-setup.txt
+	python3 -m pip install -U --requirement $final_path/requirements.txt
+	python3 -m pip install -U --requirement $final_path/requirements-setup.txt
 	deactivate 'dummy_arg'
 popd || ynh_die
 
@@ -146,7 +147,14 @@ systemctl daemon-reload --quiet
 #=================================================
 
 # Set permissions on app files
-chown -R root: $final_path
+chown -R root:$app $final_path
+chmod -R o-rwx $final_path
+chmod -R g-w $final_path
+setfacl -n -R -m user:www-data:rx -m default:user:www-data:rx $final_path
+setfacl -n -R -m user:www-data:- -m default:user:www-data:- $final_path/envs
+chown -R $app:$app $datadir
+chmod o-rwx $datadir
+setfacl -n -R -m user:www-data:rx -m default:user:www-data:rx $datadir
 
 #=================================================
 # INTEGRATE SERVICE IN YUNOHOST
