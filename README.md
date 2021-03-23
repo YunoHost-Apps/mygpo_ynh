@@ -32,7 +32,7 @@ Edit files under `/opt/yunohost/APPDIR/envs/prod` to set environment variables.
 
 #### Multi-user support
 
-* Are LDAP and HTTP auth supported? **No**
+* Are LDAP and HTTP auth supported? **LDAP only**
 * Can the app be used by multiple users? **Yes**
 
 #### Supported architectures

@@ -193,6 +193,7 @@ pushd $final_path || ynh_die
 	python3 -m pip install -U wheel pip setuptools
 	python3 -m pip install --requirement $final_path/requirements.txt
 	python3 -m pip install --requirement $final_path/requirements-setup.txt
+	python3 -m pip install --requirement $final_path/requirements-ynh.txt
 	deactivate 'dummy_arg'
 popd || ynh_die
 
