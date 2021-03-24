@@ -5,14 +5,12 @@
 #=================================================
 # IMPORT GENERIC HELPERS
 #=================================================
-
 source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
 # RETRIEVE ARGUMENTS
 #=================================================
-
 old_domain=$YNH_APP_OLD_DOMAIN
 
 new_domain=$YNH_APP_NEW_DOMAIN
@@ -47,7 +45,6 @@ ynh_abort_if_errors
 #=================================================
 # CHECK WHICH PARTS SHOULD BE CHANGED
 #=================================================
-
 change_domain=0
 if [ "$old_domain" != "$new_domain" ]
 then
@@ -65,7 +62,6 @@ ynh_systemd_action --service_name=$app-celery --action="stop" --log_path="/var/l
 ynh_systemd_action --service_name=$app-beat --action="stop" --log_path="/var/log/$app/$app.log"
 ynh_systemd_action --service_name=$app.socket --action="stop" --log_path="/var/log/$app/$app.log"
 ynh_systemd_action --service_name=$app --action="stop" --log_path="/var/log/$app/$app.log"
-
 
 #=================================================
 # MODIFY URL IN NGINX CONF
@@ -112,5 +108,4 @@ ynh_systemd_action --service_name=nginx --action=reload
 #=================================================
 # END OF SCRIPT
 #=================================================
-
 ynh_script_progression --message="Change of URL completed for $app" --last

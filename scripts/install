@@ -5,16 +5,13 @@
 #=================================================
 # IMPORT GENERIC HELPERS
 #=================================================
-
 source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
 # MANAGE SCRIPT FAILURE
 #=================================================
-
 ynh_clean_setup () {
-	### Remove this function if there's nothing to clean before calling the remove script.
 	true
 }
 # Exit if an error occurs during the execution of the script
@@ -32,33 +29,13 @@ admin_email=$(ynh_user_get_info --username=$admin --key="mail")
 secret_key=$(ynh_string_random --length=64)
 staff_token=$(ynh_string_random --length=64)
 
-### If it's a multi-instance app, meaning it can be installed several times independently
-### The id of the app as stated in the manifest is available as $YNH_APP_ID
-### The instance number is available as $YNH_APP_INSTANCE_NUMBER (equals "1", "2"...)
-### The app instance name is available as $YNH_APP_INSTANCE_NAME
-###    - the first time the app is installed, YNH_APP_INSTANCE_NAME = ynhexample
-###    - the second time the app is installed, YNH_APP_INSTANCE_NAME = ynhexample__2
-###    - ynhexample__{N} for the subsequent installations, with N=3,4...
-### The app instance name is probably what interests you most, since this is
-### guaranteed to be unique. This is a good unique identifier to define installation path,
-### db names...
 app=$YNH_APP_INSTANCE_NAME
 
 #=================================================
 # CHECK IF THE APP CAN BE INSTALLED WITH THESE ARGS
 #=================================================
-### About --weight and --time
-### ynh_script_progression will show to your final users the progression of each scripts.
-### In order to do that, --weight will represent the relative time of execution compared to the other steps in the script.
-### is a packager option, it will show you the execution time since the previous call.
-### This option should be removed before releasing your app.
-### Use the execution time, given by --time, to estimate the weight of a step.
-### A common way to do it is to set a weight equal to the execution time in second +1.
-### The execution time is given for the duration since the previous call. So the weight should be applied to this previous call.
 ynh_script_progression --message="Validating installation parameters..." --weight=1
 
-### If the app uses NGINX as web server (written in HTML/PHP in most cases), the final path should be "/var/www/$app".
-### If the app provides an internal web server (or uses another application server such as uWSGI), the final path should be "/opt/yunohost/$app"
 final_path=/opt/yunohost/$app
 test ! -e "$final_path" || ynh_die --message="This path already contains a folder"
 
@@ -83,14 +60,6 @@ ynh_app_setting_set --app=$app --key=random_key --value=$secret_key
 #=================================================
 ynh_script_progression --message="Installing dependencies..." --weight=3
 
-### `ynh_install_app_dependencies` allows you to add any "apt" dependencies to the package.
-### Those deb packages will be installed as dependencies of this package.
-### If you're not using this helper:
-###		- Remove the section "REMOVE DEPENDENCIES" in the remove script
-###		- Remove the variable "pkg_dependencies" in _common.sh
-###		- As well as the section "REINSTALL DEPENDENCIES" in the restore script
-###		- And the section "UPGRADE DEPENDENCIES" in the upgrade script
-
 ynh_install_app_dependencies $pkg_dependencies
 
 #=================================================
@@ -112,10 +81,6 @@ ynh_psql_execute_as_root --sql="ALTER ROLE $db_user SET statement_timeout = 5000
 #=================================================
 ynh_script_progression --message="Setting up source files..." --weight=1
 
-### `ynh_setup_source` is used to install an app from a zip or tar.gz file,
-### downloaded from an upstream source, like a git repository.
-### `ynh_setup_source` use the file conf/app.src
-
 ynh_app_setting_set --app=$app --key=final_path --value=$final_path
 # Download, check integrity, uncompress and patch the source from app.src
 ynh_setup_source --dest_dir="$final_path"
@@ -124,8 +89,6 @@ ynh_setup_source --dest_dir="$final_path"
 # NGINX CONFIGURATION
 #=================================================
 ynh_script_progression --message="Configuring NGINX web server..." --weight=1
-
-### `ynh_add_nginx_config` will use the file conf/nginx.conf
 
 # Create a dedicated NGINX config
 ynh_add_nginx_config
@@ -163,7 +126,6 @@ ynh_app_setting_set --app=$app --key=datadir --value="$datadir"
 # ENVDIR CONFIGURATION
 #=================================================
 ynh_script_progression --message="Setting up envdir..." --weight=1
-
 
 env_path=$final_path/envs/prod
 
@@ -212,16 +174,6 @@ popd || ynh_die
 #=================================================
 ynh_script_progression --message="Configuring systemd services..." --weight=1
 
-### `ynh_systemd_config` is used to configure a systemd script for an app.
-### It can be used for apps that use sysvinit (with adaptation) or systemd.
-### Have a look at the app to be sure this app needs a systemd script.
-### `ynh_systemd_config` will use the file conf/systemd.service
-### If you're not using these lines:
-###		- You can remove those files in conf/.
-###		- Remove the section "BACKUP SYSTEMD" in the backup script
-###		- Remove also the section "STOP AND REMOVE SERVICE" in the remove script
-###		- As well as the section "RESTORE SYSTEMD" in the restore script
-###		- And the section "SETUP SYSTEMD" in the upgrade script
 
 # Create a dedicated systemd config
 ynh_add_systemd_config
@@ -237,11 +189,6 @@ systemctl daemon-reload --quiet
 #=================================================
 # SECURE FILES AND DIRECTORIES
 #=================================================
-
-### For security reason, any app should set the permissions to root: before anything else.
-### Then, if write authorization is needed, any access should be given only to directories
-### that really need such authorization.
-
 # Set permissions to app files
 chown -R root:$app $final_path
 chmod -R o-rwx $final_path
@@ -254,45 +201,13 @@ setfacl -n -R -m user:www-data:- -m default:user:www-data:- $final_path/envs
 #=================================================
 ynh_script_progression --message="Integrating service in YunoHost..." --weight=1
 
-### `yunohost service add` integrates a service in YunoHost. It then gets 
-### displayed in the admin interface and through the others `yunohost service` commands.
-### (N.B.: this line only makes sense if the app adds a service to the system!)
-### If you're not using these lines:
-###		- You can remove these files in conf/.
-###		- Remove the section "REMOVE SERVICE INTEGRATION IN YUNOHOST" in the remove script
-###		- As well as the section "INTEGRATE SERVICE IN YUNOHOST" in the restore script
-###		- And the section "INTEGRATE SERVICE IN YUNOHOST" in the upgrade script
-
 yunohost service add $app --description="Manage podcast subscriptions, and sync them between apps and devices" --log="/var/log/$app/$app.log"
-
-### Additional options starting with 3.8:
-###
-### --needs_exposed_ports "$port" a list of ports that needs to be publicly exposed
-###                               which will then be checked by YunoHost's diagnosis system
-###                               (N.B. DO NOT USE THIS is the port is only internal!!!)
-###
-### --test_status "some command"  a custom command to check the status of the service
-###                               (only relevant if 'systemctl status' doesn't do a good job)
-###
-### --test_conf "some command"    some command similar to "nginx -t" that validates the conf of the service
-###
-### Re-calling 'yunohost service add' during the upgrade script is the right way
-### to proceed if you later realize that you need to enable some flags that
-### weren't enabled on old installs (be careful it'll override the existing
-### service though so you should re-provide all relevant flags when doing so)
 
 #=================================================
 # START SYSTEMD SERVICE
 #=================================================
 ynh_script_progression --message="Starting systemd services..." --weight=1
 
-### `ynh_systemd_action` is used to start systemd services for an app.
-### Only needed if you have configure systemd services
-### If you're not using these lines:
-###		- Remove the section "STOP SYSTEMD SERVICE" and "START SYSTEMD SERVICE" in the backup script
-###		- As well as the section "START SYSTEMD SERVICE" in the restore script
-###		- As well as the section"STOP SYSTEMD SERVICE" and "START SYSTEMD SERVICE" in the upgrade script
-###		- And the section "STOP SYSTEMD SERVICE" and "START SYSTEMD SERVICE" in the change_url script
 
 # Start systemd services
 ynh_systemd_action --service_name=$app-celery --action="start" --log_path="/var/log/$app/$app.log"
@@ -310,7 +225,6 @@ ynh_script_progression --message="Configuring permissions..." --weight=1
 ynh_permission_create --permission="api" --url="/api" -A "/clientconfig.json" "/subscriptions" "/suggestions"  --allowed="visitors" --show_tile="false" --protected="true"
 ynh_permission_create --permission="api-noauth" --url="/toplist" -A "/api/2/data" "/api/2/tag" "/api/2/tags" "/search.opml" "/search.json" "/search.jsonp" "/search.txt" "/search.xml" "/toplist.opml"  --show_tile="false"
 ynh_permission_create --permission="api-lists" --url="/api/2/lists"  --show_tile="false"
-
 
 # Make app public if necessary
 if [ $is_public -eq 1 ]
@@ -332,5 +246,4 @@ ynh_systemd_action --service_name=nginx --action=reload
 #=================================================
 # END OF SCRIPT
 #=================================================
-
 ynh_script_progression --message="Installation of $app completed" --last
