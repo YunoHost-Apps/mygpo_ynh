@@ -24,7 +24,7 @@ This is the webservice powering the https://gpodder.net website. It can be used 
 
 ## Configuration
 
-Edit files under `/opt/yunohost/APPDIR/envs/prod` to set environment variables.
+Edit files under `/opt/yunohost/APPDIR/envs/prod` to set environment variables. There is an admin interface at `yourdomain.tld/admin` that the admin user can log in to.
 
 ## Documentation
 

@@ -166,6 +166,7 @@ pushd $final_path || ynh_die
 	source $final_path/venv/bin/activate
 	envdir $env_path python3 $final_path/manage.py makemigrations
 	envdir $env_path python3 $final_path/manage.py migrate
+	envdir $env_path python3 $final_path/manage.py createsuperuser --username "$admin" --email "$admin_email" --noinput -v 0
 	deactivate 'dummy_arg'
 popd || ynh_die
 

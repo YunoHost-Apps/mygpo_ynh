@@ -24,7 +24,7 @@ Ceci est le service derrière https://gpodder.net. Il peut servir pour synchroni
 
 ## Configuration
 
-Modifiez les fichiers sous `/opt/yunohost/APPDIR/envs/prod` pour configurer les variables d'environment.
+Modifiez les fichiers sous `/opt/yunohost/APPDIR/envs/prod` pour configurer les variables d'environment. Il y a une interface admin `a `votre-domaine.tld/admin` (seulement accessible par l'adminsitrateur).
 
 ## Documentation
 
@@ -42,14 +42,7 @@ Modifiez les fichiers sous `/opt/yunohost/APPDIR/envs/prod` pour configurer les 
 
 ## Limitations
 
-* Limitations connues.
-
-## Informations additionnelles
-
-* Autres informations que vous souhaitez ajouter sur cette application.
-
-**Plus d'informations sur la page de documentation :**  
-https://yunohost.org/packaging_apps
+* Le service d'analyse de flux n'est pas inclu, https://feeds.gpodder.net est utilisé
 
 ## Liens
 
