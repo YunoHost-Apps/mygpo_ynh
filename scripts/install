@@ -125,7 +125,7 @@ ynh_app_setting_set --app=$app --key=datadir --value="$datadir"
 #=================================================
 # ENVDIR CONFIGURATION
 #=================================================
-ynh_script_progression --message="Setting up envdir..." --weight=1
+ynh_script_progression --message="Building configuration..." --weight=1
 
 env_path=$final_path/envs/prod
 
@@ -175,7 +175,6 @@ popd || ynh_die
 #=================================================
 ynh_script_progression --message="Configuring systemd services..." --weight=1
 
-
 # Create a dedicated systemd config
 ynh_add_systemd_config
 ynh_add_systemd_config --service="$app-socket" --template systemd.socket
@@ -208,7 +207,6 @@ yunohost service add $app --description="Manage podcast subscriptions, and sync 
 # START SYSTEMD SERVICE
 #=================================================
 ynh_script_progression --message="Starting systemd services..." --weight=1
-
 
 # Start systemd services
 ynh_systemd_action --service_name=$app-celery --action="start" --log_path="/var/log/$app/$app.log"

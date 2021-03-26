@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+source /usr/share/yunohost/helpers
+
+app="${0//50-}"
+username=$1
+purge=$2
+
+final_path=$(ynh_app_setting_get --app=$app --key=final_path)
+env_path=$final_path/envs/prod
+
+pushd $final_path
+	source $final_path/venv/bin/activate
+	envdir $env_path python3 $final_path/manage.py shell <<< "
+from django.contrib.auth import get_user_model
+User = get_user_model()
+try:
+    user = User.objects.get(username='$user')
+    user.is_active = False
+    user.save()
+    if $purge:
+        user.delete()
+except User.DoesNotExist:
+    pass
+"
+popd
