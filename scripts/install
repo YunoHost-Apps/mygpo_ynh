@@ -162,7 +162,7 @@ popd || ynh_die
 # INITIALIZE DATABASE
 #=================================================
 pushd $final_path || ynh_die
-	chown -R root:$app $final_path
+	chown -R $app:$app $final_path
 	sudo -u $app $final_path/venv/bin/envdir $env_path $final_path/venv/bin/python $final_path/manage.py makemigrations
 	sudo -u $app $final_path/venv/bin/envdir $env_path $final_path/venv/bin/python $final_path/manage.py migrate
 	sudo -u $app $final_path/venv/bin/envdir $env_path $final_path/venv/bin/python $final_path/manage.py createsuperuser --username "$admin" --email "$admin_email" --noinput -v 0
