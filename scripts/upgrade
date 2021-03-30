@@ -100,10 +100,10 @@ ynh_script_progression --message="Upgrading Python virtualenv..." --weight=2
 pushd $final_path || ynh_die
 	chown -R $app:$app $final_path
 	sudo -u $app python3 -m venv $final_path/venv
-	sudo -u $app $final_path/venv/bin/python -m pip install -U wheel pip setuptools
-	sudo -u $app $final_path/venv/bin/python -m pip install -U --requirement $final_path/requirements.txt
-	sudo -u $app $final_path/venv/bin/python -m pip install -U --requirement $final_path/requirements-setup.txt
-	sudo -u $app $final_path/venv/bin/python -m pip install -U --requirement $final_path/requirements-ynh.txt
+	sudo -u $app $final_path/venv/bin/pip --cache-dir $final_path/.cache/pip install -U wheel pip --cache-dir $final_path/.cache/pip setuptools
+	sudo -u $app $final_path/venv/bin/pip --cache-dir $final_path/.cache/pip install -U --requirement $final_path/requirements.txt
+	sudo -u $app $final_path/venv/bin/pip --cache-dir $final_path/.cache/pip install -U --requirement $final_path/requirements-setup.txt
+	sudo -u $app $final_path/venv/bin/pip --cache-dir $final_path/.cache/pip install -U --requirement $final_path/requirements-ynh.txt
 	chown -R root:root $final_path
 popd || ynh_die
 
