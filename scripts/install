@@ -150,24 +150,24 @@ echo $staff_token > $env_path/STAFF_TOKEN
 ynh_script_progression --message="Initializing Python virtualenv..." --weight=20
 
 pushd $final_path || ynh_die
-	python3 -m venv $final_path/venv
-	source $final_path/venv/bin/activate
-	python3 -m pip install -U wheel pip setuptools
-	python3 -m pip install --requirement $final_path/requirements.txt
-	python3 -m pip install --requirement $final_path/requirements-setup.txt
-	python3 -m pip install --requirement $final_path/requirements-ynh.txt
-	deactivate 'dummy_arg'
+	chown -R $app:$app $final_path
+	sudo -u $app python3 -m venv $final_path/venv
+	sudo -u $app $final_path/venv/bin/python -m pip install -U wheel pip setuptools
+	sudo -u $app $final_path/venv/bin/python -m pip install -U --requirement $final_path/requirements.txt
+	sudo -u $app $final_path/venv/bin/python -m pip install -U --requirement $final_path/requirements-setup.txt
+	sudo -u $app $final_path/venv/bin/python -m pip install -U --requirement $final_path/requirements-ynh.txt
+	chown -R root:root $final_path
 popd || ynh_die
 
 #=================================================
 # INITIALIZE DATABASE
 #=================================================
 pushd $final_path || ynh_die
-	source $final_path/venv/bin/activate
-	envdir $env_path python3 $final_path/manage.py makemigrations
-	envdir $env_path python3 $final_path/manage.py migrate
-	envdir $env_path python3 $final_path/manage.py createsuperuser --username "$admin" --email "$admin_email" --noinput -v 0
-	deactivate 'dummy_arg'
+	chown -R root:$app $final_path
+	sudo -u $app $final_path/venv/bin/envdir $env_path python3 $final_path/manage.py makemigrations
+	sudo -u $app $final_path/venv/bin/envdir $env_path python3 $final_path/manage.py migrate
+	sudo -u $app $final_path/venv/bin/envdir $env_path python3 $final_path/manage.py createsuperuser --username "$admin" --email "$admin_email" --noinput -v 0
+	chown -R root:root $final_path
 popd || ynh_die
 
 #=================================================
