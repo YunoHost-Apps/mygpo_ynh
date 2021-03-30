@@ -119,7 +119,6 @@ chown -R $app:$app $datadir
 chmod o-rwx $datadir
 setfacl -n -R -m user:www-data:rx -m default:user:www-data:rx $datadir
 
-
 ynh_app_setting_set --app=$app --key=datadir --value="$datadir"
 
 #=================================================
@@ -164,9 +163,9 @@ popd || ynh_die
 #=================================================
 pushd $final_path || ynh_die
 	chown -R root:$app $final_path
-	sudo -u $app $final_path/venv/bin/envdir $env_path python3 $final_path/manage.py makemigrations
-	sudo -u $app $final_path/venv/bin/envdir $env_path python3 $final_path/manage.py migrate
-	sudo -u $app $final_path/venv/bin/envdir $env_path python3 $final_path/manage.py createsuperuser --username "$admin" --email "$admin_email" --noinput -v 0
+	sudo -u $app $final_path/venv/bin/envdir $env_path $final_path/venv/bin/python $final_path/manage.py makemigrations
+	sudo -u $app $final_path/venv/bin/envdir $env_path $final_path/venv/bin/python $final_path/manage.py migrate
+	sudo -u $app $final_path/venv/bin/envdir $env_path $final_path/venv/bin/python $final_path/manage.py createsuperuser --username "$admin" --email "$admin_email" --noinput -v 0
 	chown -R root:root $final_path
 popd || ynh_die
 
