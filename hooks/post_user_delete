@@ -2,7 +2,7 @@
 
 source /usr/share/yunohost/helpers
 
-app="${0//50-}"
+app="${0//.\/50-}"
 username=$1
 purge=$2
 
