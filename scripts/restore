@@ -84,8 +84,7 @@ ynh_install_app_dependencies $pkg_dependencies
 #=================================================
 # Restore permissions on app files
 chown -R root:$app $final_path
-chmod -R o-rwx $final_path
-chmod -R g-w $final_path
+chmod -R g=u,g-w,o-rwx $final_path
 setfacl -n -R -m user:www-data:rx -m default:user:www-data:rx $final_path
 setfacl -n -R -m user:www-data:- -m default:user:www-data:- $final_path/envs
 chown -R $app:$app $datadir
