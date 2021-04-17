@@ -54,7 +54,7 @@ fi
 #=================================================
 # STANDARD MODIFICATIONS
 #=================================================
-# STOP SYSTEMD SERVICE
+# STOP SYSTEMD SERVICES
 #=================================================
 ynh_script_progression --message="Stopping systemd services..." --weight=1
 
@@ -87,10 +87,12 @@ echo $new_domain > $final_path/envs/prod/DEFAULT_BASE_URL
 echo "$app@$new_domain" > $final_path/envs/prod/DEFAULT_FROM_EMAIL
 echo "$app@$new_domain" > $final_path/envs/prod/SERVER_EMAIL
 
+set_permissions
+
 #=================================================
 # GENERIC FINALISATION
 #=================================================
-# START SYSTEMD SERVICE
+# START SYSTEMD SERVICES
 #=================================================
 ynh_script_progression --message="Starting systemd services..." --weight=1
 
