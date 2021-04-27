@@ -15,11 +15,7 @@ ynh_script_progression --message="Loading installation settings..." --weight=1
 
 app=$YNH_APP_INSTANCE_NAME
 
-domain=$(ynh_app_setting_get --app=$app --key=domain)
-db_name=$(ynh_app_setting_get --app=$app --key=db_name)
-db_user=$db_name
-final_path=$(ynh_app_setting_get --app=$app --key=final_path)
-datadir=$(ynh_app_setting_get --app=$app --key=datadir)
+get_app_settings
 
 #=================================================
 # STANDARD REMOVE
@@ -48,6 +44,7 @@ systemctl daemon-reload --quiet
 ynh_remove_systemd_config
 ynh_remove_systemd_config -s $app-celery
 ynh_remove_systemd_config -s $app-beat
+
 #=================================================
 # REMOVE THE POSTGRESQL DATABASE
 #=================================================
@@ -87,10 +84,10 @@ ynh_remove_nginx_config
 #=================================================
 
 # Remove the log files
-ynh_secure_remove --file="/var/log/$app/"
+ynh_secure_remove --file="/var/log/$app"
 
 # Remove data dir
-ynh_secure_remove --file="$datadir"
+ynh_secure_remove --file="$data_path"
 
 #=================================================
 # GENERIC FINALIZATION

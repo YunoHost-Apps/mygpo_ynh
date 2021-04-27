@@ -1,10 +1,9 @@
 [Unit]
 Description=GPodder-beat
-After=network.target postgresql.service redis.service
+After=network.target postgresql.service redis.service __APP__.scoket
 
 
 [Service]
-Type=basic
 User=__APP__
 Group=__APP__
 WorkingDirectory=__FINALPATH__

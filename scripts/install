@@ -39,6 +39,9 @@ ynh_script_progression --message="Validating installation parameters..." --weigh
 final_path=/opt/yunohost/$app
 test ! -e "$final_path" || ynh_die --message="This path already contains a folder"
 
+data_path=/home/yunohost.app/$app
+test ! -e "$data_path" || ynh_die --message="This path already contains a folder"
+
 # Register (book) web path
 ynh_webpath_register --app=$app --domain=$domain --path_url=$path_url
 
@@ -50,7 +53,6 @@ ynh_script_progression --message="Storing installation settings..." --weight=1
 ynh_app_setting_set --app=$app --key=domain --value=$domain
 ynh_app_setting_set --app=$app --key=path --value=$path_url
 ynh_app_setting_set --app=$app --key=admin --value=$admin
-ynh_app_setting_set --app=$app --key=admin_email --value=$admin_email
 ynh_app_setting_set --app=$app --key=random_key --value=$secret_key
 
 #=================================================
@@ -63,17 +65,23 @@ ynh_script_progression --message="Installing dependencies..." --weight=3
 ynh_install_app_dependencies $pkg_dependencies
 
 #=================================================
+# CREATE DEDICATED USER
+#=================================================
+ynh_script_progression --message="Configuring system user..." --weight=1
+
+# Create a q user
+ynh_system_user_create --username=$app
+
+#=================================================
 # CREATE A POSTGRESQL DATABASE
 #=================================================
 ynh_script_progression --message="Creating a PostgreSQL database..."
 
 db_name=$(ynh_sanitize_dbid --db_name=$app)
 db_user=$db_name
-db_pwd=$(ynh_string_random --length=30)
 ynh_app_setting_set --app=$app --key=db_name --value=$db_name
-ynh_app_setting_set --app=$app --key=db_pwd --value=$db_pwd
 ynh_psql_test_if_first_run
-ynh_psql_setup_db --db_user=$db_user --db_name=$db_name --db_pwd=$db_pwd
+ynh_psql_setup_db --db_user=$db_user --db_name=$db_name
 ynh_psql_execute_as_root --sql="ALTER ROLE $db_user SET statement_timeout = 5000;" --database=$db_name
 
 #=================================================
@@ -82,8 +90,11 @@ ynh_psql_execute_as_root --sql="ALTER ROLE $db_user SET statement_timeout = 5000
 ynh_script_progression --message="Setting up source files..." --weight=1
 
 ynh_app_setting_set --app=$app --key=final_path --value=$final_path
+ynh_app_setting_set --app=$app --key=data_path --value=$data_path
 # Download, check integrity, uncompress and patch the source from app.src
 ynh_setup_source --dest_dir="$final_path"
+
+set_permissions
 
 #=================================================
 # NGINX CONFIGURATION
@@ -94,41 +105,11 @@ ynh_script_progression --message="Configuring NGINX web server..." --weight=1
 ynh_add_nginx_config
 
 #=================================================
-# CREATE DEDICATED USER
-#=================================================
-ynh_script_progression --message="Configuring system user..." --weight=1
-
-# Create a q user
-ynh_system_user_create --username=$app
-
-#=================================================
 # SPECIFIC SETUP
-#=================================================
-# CREATE THE DATA DIRECTORY
-#=================================================
-ynh_script_progression --message="Creating the data directory..."
-
-# Define app's data directory
-datadir="/home/yunohost.app/${app}"
-mkdir $datadir
-
-ynh_app_setting_set --app=$app --key=datadir --value="$datadir"
-
-# Give permission to the datadir
-chown -R $app:$app $datadir
-chmod o-rwx $datadir
-setfacl -n -R -m user:www-data:rx -m default:user:www-data:rx $datadir
-
-ynh_app_setting_set --app=$app --key=datadir --value="$datadir"
-
 #=================================================
 # ENVDIR CONFIGURATION
 #=================================================
 ynh_script_progression --message="Building configuration..." --weight=1
-
-env_path=$final_path/envs/prod
-
-mkdir -p $env_path
 
 echo "$admin <$admin_email>" > $env_path/ADMINS
 echo "None" > $env_path/BROKER_POOL_LIMIT
@@ -138,7 +119,7 @@ echo False > $env_path/DEBUG
 echo $domain > $env_path/DEFAULT_BASE_URL
 echo "$app@$domain" > $env_path/DEFAULT_FROM_EMAIL
 echo "django.core.mail.backends.console.EmailBackend" > $env_path/EMAIL_BACKEND
-echo "$datadir" > $env_path/MEDIA_ROOT
+echo "$data_path" > $env_path/MEDIA_ROOT
 echo $secret_key > $env_path/SECRET_KEY
 echo "$app@$domain" > $env_path/SERVER_EMAIL
 echo $staff_token > $env_path/STAFF_TOKEN
@@ -148,26 +129,12 @@ echo $staff_token > $env_path/STAFF_TOKEN
 #=================================================
 ynh_script_progression --message="Initializing Python virtualenv..." --weight=20
 
-pushd $final_path || ynh_die
-	chown -R $app:$app $final_path
-	sudo -u $app python3 -m venv $final_path/venv
-	sudo -u $app $final_path/venv/bin/pip --cache-dir $final_path/.cache/pip install -U wheel pip --cache-dir $final_path/.cache/pip setuptools
-	sudo -u $app $final_path/venv/bin/pip --cache-dir $final_path/.cache/pip install -U --requirement $final_path/requirements.txt
-	sudo -u $app $final_path/venv/bin/pip --cache-dir $final_path/.cache/pip install -U --requirement $final_path/requirements-setup.txt
-	sudo -u $app $final_path/venv/bin/pip --cache-dir $final_path/.cache/pip install -U --requirement $final_path/requirements-ynh.txt
-	chown -R root:root $final_path
-popd || ynh_die
+set_up_virtualenv
 
 #=================================================
 # INITIALIZE DATABASE
 #=================================================
-pushd $final_path || ynh_die
-	chown -R $app:$app $final_path
-	sudo -u $app $final_path/venv/bin/envdir $env_path $final_path/venv/bin/python $final_path/manage.py makemigrations
-	sudo -u $app $final_path/venv/bin/envdir $env_path $final_path/venv/bin/python $final_path/manage.py migrate
-	sudo -u $app $final_path/venv/bin/envdir $env_path $final_path/venv/bin/python $final_path/manage.py createsuperuser --username "$admin" --email "$admin_email" --noinput -v 0
-	chown -R root:root $final_path
-popd || ynh_die
+initialize_db
 
 #=================================================
 # SETUP SYSTEMD
@@ -185,15 +152,6 @@ systemctl daemon-reload --quiet
 
 #=================================================
 # GENERIC FINALIZATION
-#=================================================
-# SECURE FILES AND DIRECTORIES
-#=================================================
-# Set permissions to app files
-chown -R root:$app $final_path
-chmod -R g=u,g-w,o-rwx $final_path
-setfacl -n -R -m user:www-data:rx -m default:user:www-data:rx $final_path
-setfacl -n -R -m user:www-data:- -m default:user:www-data:- $final_path/envs
-
 #=================================================
 # INTEGRATE SERVICE IN YUNOHOST
 #=================================================
