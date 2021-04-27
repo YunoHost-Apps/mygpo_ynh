@@ -1,6 +1,7 @@
 [Unit]
 Description=GPodder
-After=network.target postgresql.service nginx.service redis.service __APP__.socket __APP__-celery.service __APP__-beat.service
+After=network.target postgresql.service nginx.service redis.service __APP__-celery.service __APP__-beat.service
+Requires=__APP__.socket
 
 
 [Service]
