@@ -58,7 +58,7 @@ ynh_backup --src_path="/etc/systemd/system/$app.socket"
 #=================================================
 # BACKUP VARIOUS FILES
 #=================================================
-ynh_backup --is_big --src_path="/home/yunohost.app/$app/"
+ynh_backup --is_big --src_path="/home/yunohost.app/$app"
 
 #=================================================
 # BACKUP THE POSTGRESQL DATABASE
