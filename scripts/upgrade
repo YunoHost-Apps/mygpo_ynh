@@ -15,10 +15,7 @@ ynh_script_progression --message="Loading installation settings..." --weight=1
 
 app=$YNH_APP_INSTANCE_NAME
 
-domain=$(ynh_app_setting_get --app=$app --key=domain)
-path_url=$(ynh_app_setting_get --app=$app --key=path)
-final_path=$(ynh_app_setting_get --app=$app --key=final_path)
-data_path=$(ynh_app_setting_get --app=$app --key=data_path)
+get_app_settings
 
 #=================================================
 # CHECK VERSION
@@ -35,6 +32,7 @@ if [ -z "$data_path" ]; then
 	ynh_app_setting_set --app=$app --key=data_path --value=$data_path
 	ynh_app_setting_delete --app=$app --key=datadir
 	ynh_app_setting_delete --app=$app --key=db_pwd
+	ynh_app_setting_delete --app=$app --key=admin_email
 fi
 
 #=================================================

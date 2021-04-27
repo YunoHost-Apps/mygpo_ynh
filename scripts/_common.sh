@@ -63,6 +63,19 @@ function perform_db_migrations {
 	sudo -u $app $final_path/venv/bin/envdir $env_path $final_path/venv/bin/python $final_path/manage.py migrate
 }
 
+function get_app_settings {
+	domain=$(ynh_app_setting_get --app=$app --key=domain)
+	path_url=$(ynh_app_setting_get --app=$app --key=path)
+	final_path=$(ynh_app_setting_get --app=$app --key=final_path)
+	data_path=$(ynh_app_setting_get --app=$app --key=data_path)
+	admin=$(ynh_app_setting_get --app=$app --key=admin)
+	secret_key=$(ynh_app_setting_get --app=$app --key=secret_key)
+	admin_email=$(ynh_user_get_info --username=$admin --key="mail")
+	db_name=$(ynh_app_setting_get --app=$app --key=db_name)
+	db_user="$db_name"
+	db_pwd=$(ynh_app_setting_get --app=$app --key=psqlpwd)
+}
+
 #=================================================
 # EXPERIMENTAL HELPERS
 #=================================================
