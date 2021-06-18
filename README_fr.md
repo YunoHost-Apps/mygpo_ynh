@@ -3,7 +3,7 @@
 [![Niveau d'intégration](https://dash.yunohost.org/integration/mygpo.svg)](https://dash.yunohost.org/appci/app/mygpo) ![](https://ci-apps.yunohost.org/ci/badges/mygpo.status.svg) ![](https://ci-apps.yunohost.org/ci/badges/mygpo.maintain.svg)  
 [![Installer mygpo avec YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=mygpo)
 
-*[Read this readme in english.](./README.md)* 
+*[Read this readme in english.](./README.md)*
 
 > *Ce package vous permet d'installer mygpo rapidement et simplement sur un serveur YunoHost.  
 Si vous n'avez pas YunoHost, consultez [le guide](https://yunohost.org/#/install) pour apprendre comment l'installer.*
@@ -12,7 +12,7 @@ Si vous n'avez pas YunoHost, consultez [le guide](https://yunohost.org/#/install
 
 Ceci est le service derrière https://gpodder.net. Il peut servir pour synchronizer vos flux balado entre [clients compatibles](https://gpoddernet.readthedocs.io/en/latest/user/clients.html).
 
-**Version incluse :** 2021-05-24
+**Version incluse :** 2021-06-16
 
 ## Captures d'écran
 
@@ -24,11 +24,11 @@ Ceci est le service derrière https://gpodder.net. Il peut servir pour synchroni
 
 ## Configuration
 
-Modifiez les fichiers sous `/opt/yunohost/APPDIR/envs/prod` pour configurer les variables d'environment. Il y a une interface admin `a `votre-domaine.tld/admin` (seulement accessible par l'adminsitrateur).
+Modifiez les fichiers sous `/opt/yunohost/APPDIR/envs/prod` pour configurer les variables d'environment. Il y a une interface admin a `votre-domaine.tld/admin` (seulement accessible par l'administrateur).
 
 ## Documentation
 
- * Documentation officielle : https://gpoddernet.readthedocs.io/
+* Documentation officielle : https://gpoddernet.readthedocs.io/
 
 #### Support multi-utilisateur
 
