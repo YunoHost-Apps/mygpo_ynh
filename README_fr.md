@@ -12,7 +12,7 @@ Si vous n'avez pas YunoHost, consultez [le guide](https://yunohost.org/#/install
 
 Ceci est le service derrière https://gpodder.net. Il peut servir pour synchronizer vos flux balado entre [clients compatibles](https://gpoddernet.readthedocs.io/en/latest/user/clients.html).
 
-**Version incluse :** 2021-06-16
+**Version incluse :** 2021-09-13
 
 ## Captures d'écran
 

@@ -6,7 +6,7 @@
         "en": "Manage podcast subscriptions, and sync them between apps and devices",
         "fr": "Gérez vos sousciptions balado, et sychronisez-lez entre vos applis et appareils"
     },
-    "version": "2.11.20210616~ynh1",
+    "version": "2.11.20210913~ynh1",
     "url": "https://github.com/gpodder/mygpo",
     "license": "AGPL-3.0-only",
     "maintainer": {
