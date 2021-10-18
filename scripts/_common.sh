@@ -59,7 +59,7 @@ function upgrade_db {
 }
 
 function perform_db_migrations {
-	sudo -u $app $final_path/venv/bin/envdir $env_path $final_path/venv/bin/python $final_path/manage.py makemigrations
+	sudo -u $app $final_path/venv/bin/envdir $env_path $final_path/venv/bin/python $final_path/manage.py makemigrations --merge
 	sudo -u $app $final_path/venv/bin/envdir $env_path $final_path/venv/bin/python $final_path/manage.py migrate
 }
 
