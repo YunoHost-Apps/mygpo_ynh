@@ -8,13 +8,20 @@
     },
     "version": "2.11.20211020~ynh1",
     "url": "https://github.com/gpodder/mygpo",
+    "upstream": {
+        "license": "AGPL-3.0-only",
+        "website": "https://gpodder.net",
+        "demo": "https://gpodder.net",
+        "admindoc": "https://gpoddernet.readthedocs.io/",
+        "code": "https://github.com/gpodder/mygpo"
+    },
     "license": "AGPL-3.0-only",
     "maintainer": {
         "name": "Jules Bertholet",
         "email": "jules.bertholet@gmail.com"
     },
     "requirements": {
-        "yunohost": ">= 4.1.3"
+        "yunohost": ">= 4.3.0"
     },
     "multi_instance": false,
     "services": [
@@ -23,16 +30,14 @@
         "redis-server"
     ],
     "arguments": {
-        "install" : [
+        "install": [
             {
                 "name": "domain",
-                "type": "domain",
-                "example": "example.com"
+                "type": "domain"
             },
             {
                 "name": "admin",
-                "type": "user",
-                "example": "johndoe"
+                "type": "user"
             },
             {
                 "name": "is_public",

@@ -1,13 +1,8 @@
-# See here for more information
-# https://github.com/YunoHost/package_check#syntax-check_process-file
-
-# Move this file from check_process.default to check_process when you have filled it.
-
 ;; Test complet
 	; Manifest
-		domain="domain.tld"	(DOMAIN)
-		admin="john"	(USER)
-		is_public=1	(PUBLIC|public=1|private=0)
+		domain="domain.tld"
+		admin="john"
+		is_public=1
 	; Checks
 		pkg_linter=1
 		setup_sub_dir=0
@@ -16,7 +11,10 @@
 		setup_private=1
 		setup_public=1
 		upgrade=1
+		# 2.11.1~ynh3
 		upgrade=1	from_commit=a50d46ae3a01d8a5b08ca9f9e62bfc9269fdedfa
+		# 2.11.20210519~ynh1
+		upgrade=1	from_commit=59b41b65dc33c3da471175002f37576ff460dc46
 		backup_restore=1
 		multi_instance=0
 		port_already_use=0
@@ -26,6 +24,5 @@ Email=
 Notification=none
 ;;; Upgrade options
 	; commit=CommitHash
-		name= Tweak starting of systemd services (April 1)
+		name=Tweak starting of systemd services (April 1)
 		manifest_arg=domain=DOMAIN&admin=USER&is_public=1&
-
