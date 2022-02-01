@@ -5,15 +5,19 @@
 #=================================================
 # IMPORT GENERIC HELPERS
 #=================================================
+
 source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
 # RETRIEVE ARGUMENTS
 #=================================================
+
 old_domain=$YNH_APP_OLD_DOMAIN
+old_path=$YNH_APP_OLD_PATH
 
 new_domain=$YNH_APP_NEW_DOMAIN
+new_path="/"
 
 app=$YNH_APP_INSTANCE_NAME
 
@@ -25,9 +29,9 @@ ynh_script_progression --message="Loading installation settings..." --weight=1
 get_app_settings
 
 #=================================================
-# BACKUP BEFORE UPGRADE THEN ACTIVE TRAP
+# BACKUP BEFORE CHANGE URL THEN ACTIVE TRAP
 #=================================================
-ynh_script_progression --message="Backing up the app before changing its URL (may take a while)..." --weight=1
+ynh_script_progression --message="Backing up the app before changing its URL (may take a while)..."
 
 # Backup the current version of the app
 ynh_backup_before_upgrade
@@ -44,10 +48,17 @@ ynh_abort_if_errors
 #=================================================
 # CHECK WHICH PARTS SHOULD BE CHANGED
 #=================================================
+
 change_domain=0
 if [ "$old_domain" != "$new_domain" ]
 then
 	change_domain=1
+fi
+
+change_path=0
+if [ "$old_path" != "$new_path" ]
+then
+	change_path=1
 fi
 
 #=================================================
@@ -110,4 +121,5 @@ ynh_systemd_action --service_name=nginx --action=reload
 #=================================================
 # END OF SCRIPT
 #=================================================
+
 ynh_script_progression --message="Change of URL completed for $app" --last
