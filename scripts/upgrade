@@ -5,6 +5,7 @@
 #=================================================
 # IMPORT GENERIC HELPERS
 #=================================================
+
 source _common.sh
 source /usr/share/yunohost/helpers
 
@@ -20,20 +21,9 @@ get_app_settings
 #=================================================
 # CHECK VERSION
 #=================================================
+ynh_script_progression --message="Checking version..."
+
 upgrade_type=$(ynh_check_app_version_changed)
-
-#=================================================
-# ENSURE DOWNWARD COMPATIBILITY
-#=================================================
-ynh_script_progression --message="Ensuring downward compatibility..." --time --weight=1
-
-if [ -z "$data_path" ]; then
-	data_path=$(ynh_app_setting_get --app=$app --key=datadir)
-	ynh_app_setting_set --app=$app --key=data_path --value=$data_path
-	ynh_app_setting_delete --app=$app --key=datadir
-	ynh_app_setting_delete --app=$app --key=db_pwd
-	ynh_app_setting_delete --app=$app --key=admin_email
-fi
 
 #=================================================
 # BACKUP BEFORE UPGRADE THEN ACTIVE TRAP
@@ -67,15 +57,30 @@ systemctl disable $app-beat --quiet
 systemctl disable $app-celery --quiet
 
 #=================================================
-# UPGRADE DEPENDENCIES
+# ENSURE DOWNWARD COMPATIBILITY
 #=================================================
-ynh_script_progression --message="Upgrading dependencies..." --weight=1
+ynh_script_progression --message="Ensuring downward compatibility..." --time --weight=1
 
-ynh_install_app_dependencies $pkg_dependencies
+if [ -z "$datadir" ]; then
+	datadir=$(ynh_app_setting_get --app=$app --key=data_path)
+	ynh_app_setting_set --app=$app --key=datadir --value=$datadir
+	ynh_app_setting_delete --app=$app --key=data_path
+	ynh_app_setting_delete --app=$app --key=db_pwd
+	ynh_app_setting_delete --app=$app --key=admin_email
+fi
+
+#=================================================
+# CREATE DEDICATED USER
+#=================================================
+ynh_script_progression --message="Making sure dedicated system user exists..." --weight=1
+
+# Create a dedicated user (if not existing)
+ynh_system_user_create --username=$app --home_dir=$final_path
 
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
+
 if [ "$upgrade_type" == "UPGRADE_APP" ]
 then
 	ynh_script_progression --message="Upgrading source files..." --weight=1
@@ -95,12 +100,11 @@ ynh_script_progression --message="Upgrading NGINX web server configuration..." -
 ynh_add_nginx_config
 
 #=================================================
-# CREATE DEDICATED USER
+# UPGRADE DEPENDENCIES
 #=================================================
-ynh_script_progression --message="Making sure dedicated system user exists..." --weight=1
+ynh_script_progression --message="Upgrading dependencies..." --weight=1
 
-# Create a dedicated user (if not existing)
-ynh_system_user_create --username=$app
+ynh_install_app_dependencies $pkg_dependencies
 
 #=================================================
 # SPECIFIC UPGRADE
@@ -161,4 +165,5 @@ ynh_systemd_action --service_name=nginx --action=reload
 #=================================================
 # END OF SCRIPT
 #=================================================
+
 ynh_script_progression --message="Upgrade of $app completed" --last

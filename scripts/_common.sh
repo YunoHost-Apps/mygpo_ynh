@@ -11,14 +11,14 @@ pkg_dependencies="acl python3 python3-dev python3-pip python3-venv postgresql po
 #=================================================
 
 function set_permissions {
-	mkdir -p $data_path
+	mkdir -p $datadir
 
 	env_path=$final_path/envs/prod
 	mkdir -p $env_path
 
-	chown -R $app:$app $data_path
-	chmod o-rwx $data_path
-	setfacl -n -R -m u:www-data:rx -m d:u:www-data:rx $data_path
+	chown -R $app:$app $datadir
+	chmod o-rwx $datadir
+	setfacl -n -R -m u:www-data:rx -m d:u:www-data:rx $datadir
 
 	chown -R root:$app $final_path
 	chmod -R g=u,g-w,o-rwx $final_path
@@ -32,11 +32,11 @@ function set_up_virtualenv {
 
 	pushd $final_path || ynh_die
 		chown -R $app:$app $final_path
-		sudo -u $app python3 -m venv $final_path/venv
-		sudo -u $app $final_path/venv/bin/pip --cache-dir $final_path/.cache/pip install -U wheel pip --cache-dir $final_path/.cache/pip setuptools
-		sudo -u $app $final_path/venv/bin/pip --cache-dir $final_path/.cache/pip install -U --requirement $final_path/requirements.txt
-		sudo -u $app $final_path/venv/bin/pip --cache-dir $final_path/.cache/pip install -U --requirement $final_path/requirements-setup.txt
-		sudo -u $app $final_path/venv/bin/pip --cache-dir $final_path/.cache/pip install -U --requirement $final_path/requirements-ynh.txt
+		ynh_exec_warn_less ynh_exec_as $app python3 -m venv $final_path/venv
+		ynh_exec_warn_less ynh_exec_as $app $final_path/venv/bin/pip --cache-dir $final_path/.cache/pip install -U wheel pip --cache-dir $final_path/.cache/pip setuptools
+		ynh_exec_warn_less ynh_exec_as $app $final_path/venv/bin/pip --cache-dir $final_path/.cache/pip install -U --requirement $final_path/requirements.txt
+		ynh_exec_warn_less ynh_exec_as $app $final_path/venv/bin/pip --cache-dir $final_path/.cache/pip install -U --requirement $final_path/requirements-setup.txt
+		ynh_exec_warn_less ynh_exec_as $app $final_path/venv/bin/pip --cache-dir $final_path/.cache/pip install -U --requirement $final_path/requirements-ynh.txt
 		set_permissions
 	popd || ynh_dies
 }
@@ -45,7 +45,7 @@ function initialize_db {
 	pushd $final_path || ynh_die
 		chown -R $app:$app $final_path
 		perform_db_migrations
-		sudo -u $app $final_path/venv/bin/envdir $env_path $final_path/venv/bin/python $final_path/manage.py createsuperuser --username "$admin" --email "$admin_email" --noinput -v 0
+		ynh_exec_warn_less ynh_exec_as $app $final_path/venv/bin/envdir $env_path $final_path/venv/bin/python $final_path/manage.py createsuperuser --username "$admin" --email "$admin_email" --noinput -v 0
 		set_permissions
 	popd || ynh_die
 }
@@ -59,15 +59,15 @@ function upgrade_db {
 }
 
 function perform_db_migrations {
-	sudo -u $app $final_path/venv/bin/envdir $env_path $final_path/venv/bin/python $final_path/manage.py makemigrations
-	sudo -u $app $final_path/venv/bin/envdir $env_path $final_path/venv/bin/python $final_path/manage.py migrate
+	echo "y" | ynh_exec_warn_less ynh_exec_as $app $final_path/venv/bin/envdir $env_path $final_path/venv/bin/python $final_path/manage.py makemigrations --merge
+	ynh_exec_warn_less ynh_exec_as $app $final_path/venv/bin/envdir $env_path $final_path/venv/bin/python $final_path/manage.py migrate
 }
 
 function get_app_settings {
 	domain=$(ynh_app_setting_get --app=$app --key=domain)
 	path_url=$(ynh_app_setting_get --app=$app --key=path)
 	final_path=$(ynh_app_setting_get --app=$app --key=final_path)
-	data_path=$(ynh_app_setting_get --app=$app --key=data_path)
+	datadir=$(ynh_app_setting_get --app=$app --key=datadir)
 	admin=$(ynh_app_setting_get --app=$app --key=admin)
 	secret_key=$(ynh_app_setting_get --app=$app --key=secret_key)
 	admin_email=$(ynh_user_get_info --username=$admin --key="mail")

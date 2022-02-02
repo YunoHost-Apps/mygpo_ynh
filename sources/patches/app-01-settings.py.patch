@@ -1,5 +1,5 @@
 diff --git a/mygpo/settings.py b/mygpo/settings.py
-index 33bd283f..2666ade6 100644
+index b3927315..f295c326 100644
 --- a/mygpo/settings.py
 +++ b/mygpo/settings.py
 @@ -2,6 +2,7 @@ import re
@@ -26,4 +26,4 @@ index 33bd283f..2666ade6 100644
  SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
  
  # TODO: use (default) JSON serializer for security
- 
+

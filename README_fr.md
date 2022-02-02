@@ -1,57 +1,44 @@
-# `mygpo` (gPodder.net) pour YunoHost
+# mygpo (gPodder.net) pour YunoHost
 
 [![Niveau d'intégration](https://dash.yunohost.org/integration/mygpo.svg)](https://dash.yunohost.org/appci/app/mygpo) ![](https://ci-apps.yunohost.org/ci/badges/mygpo.status.svg) ![](https://ci-apps.yunohost.org/ci/badges/mygpo.maintain.svg)  
-[![Installer mygpo avec YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=mygpo)
+[![Installer mygpo (gPodder.net) avec YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=mygpo)
 
-*[Read this readme in english.](./README.md)* 
+*[Read this readme in english.](./README.md)*
+*[Lire ce readme en français.](./README_fr.md)*
 
-> *Ce package vous permet d'installer mygpo rapidement et simplement sur un serveur YunoHost.  
-Si vous n'avez pas YunoHost, consultez [le guide](https://yunohost.org/#/install) pour apprendre comment l'installer.*
+> *Ce package vous permet d'installer mygpo (gPodder.net) rapidement et simplement sur un serveur YunoHost.
+Si vous n'avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) pour savoir comment l'installer et en profiter.*
 
 ## Vue d'ensemble
 
-Ceci est le service derrière https://gpodder.net. Il peut servir pour synchronizer vos flux balado entre [clients compatibles](https://gpoddernet.readthedocs.io/en/latest/user/clients.html).
-
-**Version incluse :** 2021-05-19
-
-## Captures d'écran
-
-![](https://github.com/YunoHost-Apps/mygpo_ynh/raw/master/screenshot.png)
-
-## Démo
-
-* [Démo officielle](https://gpodder.net)
+This is the webservice powering the https://gpodder.net website. It can be used to sync podcast subscriptions with [supported clients](https://gpoddernet.readthedocs.io/en/latest/user/clients.html).
 
 ## Configuration
 
-Modifiez les fichiers sous `/opt/yunohost/APPDIR/envs/prod` pour configurer les variables d'environment. Il y a une interface admin `a `votre-domaine.tld/admin` (seulement accessible par l'adminsitrateur).
+Edit files under `/opt/yunohost/APPDIR/envs/prod` to set environment variables. There is an admin interface at `yourdomain.tld/admin` that the admin user can log in to.
 
-## Documentation
 
- * Documentation officielle : https://gpoddernet.readthedocs.io/
+**Version incluse :** 2.11.20211020~ynh1
 
-#### Support multi-utilisateur
+**Démo :** https://gpodder.net
 
-* L'authentification LDAP et HTTP est-elle prise en charge ? **Seulement LDAP**
-* L'application peut-elle être utilisée par plusieurs utilisateurs ? **Oui**
+## Captures d'écran
 
-#### Architectures supportées
+![](./doc/screenshots/screenshot1.png)
 
-* x86-64 - [![Build Status](https://ci-apps.yunohost.org/ci/logs/mygpo%20%28Apps%29.svg)](https://ci-apps.yunohost.org/ci/apps/mygpo/)
-* ARMv8-A - [![Build Status](https://ci-apps-arm.yunohost.org/ci/logs/mygpo%20%28Apps%29.svg)](https://ci-apps-arm.yunohost.org/ci/apps/mygpo/)
+## Avertissements / informations importantes
 
 ## Limitations
 
-* Le service d'analyse de flux n'est pas inclu, https://feeds.gpodder.net est utilisé
+* The feed-parsing service is not included, https://feeds.gpodder.net is used
 
-## Liens
+## Documentations et ressources
 
- * Signaler un bug : https://github.com/YunoHost-Apps/mygpo_ynh/issues
- * Site de l'application : https://gpodder.net
- * Dépôt de l'application principale : https://github.com/gpodder/mygpo
- * Site web YunoHost : https://yunohost.org/
-
----
+* Site officiel de l'app : https://gpodder.net
+* Documentation officielle de l'admin : https://gpoddernet.readthedocs.io/
+* Dépôt de code officiel de l'app : https://github.com/gpodder/mygpo
+* Documentation YunoHost pour cette app : https://yunohost.org/app_mygpo
+* Signaler un bug : https://github.com/YunoHost-Apps/mygpo_ynh/issues
 
 ## Informations pour les développeurs
 
@@ -63,3 +50,5 @@ sudo yunohost app install https://github.com/YunoHost-Apps/mygpo_ynh/tree/testin
 ou
 sudo yunohost app upgrade mygpo -u https://github.com/YunoHost-Apps/mygpo_ynh/tree/testing --debug
 ```
+
+**Plus d'infos sur le packaging d'applications :** https://yunohost.org/packaging_apps
