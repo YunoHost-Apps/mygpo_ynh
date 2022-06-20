@@ -2,7 +2,6 @@
 Description=GPodder-celery
 After=network.target postgresql.service redis.service __APP__.socket
 
-
 [Service]
 User=__APP__
 Group=__APP__
