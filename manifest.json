@@ -6,7 +6,7 @@
         "en": "Manage podcast subscriptions, and sync them between apps and devices",
         "fr": "Gérez vos sousciptions balado, et sychronisez-lez entre vos applis et appareils"
     },
-    "version": "2.11.20211020~ynh1",
+    "version": "2.11.20220622~ynh1",
     "url": "https://github.com/gpodder/mygpo",
     "upstream": {
         "license": "AGPL-3.0-only",
@@ -36,10 +36,6 @@
                 "type": "domain"
             },
             {
-                "name": "admin",
-                "type": "user"
-            },
-            {
                 "name": "is_public",
                 "type": "boolean",
                 "help": {
@@ -47,6 +43,10 @@
                     "fr": "Si public, n'importe-qui pourra créer un compte et accéder a certaines statistiques d'utilization. Si privé, certaines parties de l'API seront inaccessibles"
                 },
                 "default": true
+            },
+            {
+                "name": "admin",
+                "type": "user"
             }
         ]
     }

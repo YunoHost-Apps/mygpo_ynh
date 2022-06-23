@@ -3,7 +3,6 @@ Description=GPodder
 After=network.target postgresql.service nginx.service redis.service __APP__-celery.service __APP__-beat.service
 Requires=__APP__.socket
 
-
 [Service]
 Type=notify
 User=__APP__

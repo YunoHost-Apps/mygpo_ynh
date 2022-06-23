@@ -2,7 +2,6 @@
 Description=GPodder-beat
 After=network.target postgresql.service redis.service __APP__.scoket
 
-
 [Service]
 User=__APP__
 Group=__APP__
