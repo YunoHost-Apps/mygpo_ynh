@@ -5,15 +5,15 @@ It shall NOT be edited by hand.
 
 # mygpo (gPodder.net) pour YunoHost
 
-[![Niveau d'intégration](https://dash.yunohost.org/integration/mygpo.svg)](https://dash.yunohost.org/appci/app/mygpo) ![Statut du fonctionnement](https://ci-apps.yunohost.org/ci/badges/mygpo.status.svg) ![Statut de maintenance](https://ci-apps.yunohost.org/ci/badges/mygpo.maintain.svg)  
+[![Niveau d’intégration](https://dash.yunohost.org/integration/mygpo.svg)](https://dash.yunohost.org/appci/app/mygpo) ![Statut du fonctionnement](https://ci-apps.yunohost.org/ci/badges/mygpo.status.svg) ![Statut de maintenance](https://ci-apps.yunohost.org/ci/badges/mygpo.maintain.svg)  
 [![Installer mygpo (gPodder.net) avec YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=mygpo)
 
 *[Read this readme in english.](./README.md)*
 
-> *Ce package vous permet d'installer mygpo (gPodder.net) rapidement et simplement sur un serveur YunoHost.
-Si vous n'avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) pour savoir comment l'installer et en profiter.*
+> *Ce package vous permet d’installer mygpo (gPodder.net) rapidement et simplement sur un serveur YunoHost.
+Si vous n’avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) pour savoir comment l’installer et en profiter.*
 
-## Vue d'ensemble
+## Vue d’ensemble
 
 This is the webservice powering the https://gpodder.net website. It can be used to sync podcast subscriptions with [supported clients](https://gpoddernet.readthedocs.io/en/latest/user/clients.html).
 
@@ -26,9 +26,9 @@ Edit files under `/opt/yunohost/APPDIR/envs/prod` to set environment variables. 
 
 **Démo :** https://gpodder.net
 
-## Captures d'écran
+## Captures d’écran
 
-![Capture d'écran de mygpo (gPodder.net)](./doc/screenshots/screenshot1.png)
+![Capture d’écran de mygpo (gPodder.net)](./doc/screenshots/screenshot1.png)
 
 ## Avertissements / informations importantes
 
@@ -36,11 +36,15 @@ Edit files under `/opt/yunohost/APPDIR/envs/prod` to set environment variables. 
 
 * The feed-parsing service is not included, https://feeds.gpodder.net is used
 
+## Configuration
+
+Edit files under `/opt/yunohost/APPDIR/envs/prod` to set environment variables. There is an admin interface at `yourdomain.tld/admin` that the admin user can log in to.
+
 ## Documentations et ressources
 
-* Site officiel de l'app : <https://gpodder.net>
-* Documentation officielle de l'admin : <https://gpoddernet.readthedocs.io/>
-* Dépôt de code officiel de l'app : <https://github.com/gpodder/mygpo>
+* Site officiel de l’app : <https://gpodder.net>
+* Documentation officielle de l’admin : <https://gpoddernet.readthedocs.io/>
+* Dépôt de code officiel de l’app : <https://github.com/gpodder/mygpo>
 * Documentation YunoHost pour cette app : <https://yunohost.org/app_mygpo>
 * Signaler un bug : <https://github.com/YunoHost-Apps/mygpo_ynh/issues>
 
@@ -56,4 +60,4 @@ ou
 sudo yunohost app upgrade mygpo -u https://github.com/YunoHost-Apps/mygpo_ynh/tree/testing --debug
 ```
 
-**Plus d'infos sur le packaging d'applications :** <https://yunohost.org/packaging_apps>
+**Plus d’infos sur le packaging d’applications :** <https://yunohost.org/packaging_apps>
