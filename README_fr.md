@@ -18,7 +18,7 @@ Si vous n’avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) po
 This is the webservice powering the https://gpodder.net website. It can be used to sync podcast subscriptions with [supported clients](https://gpoddernet.readthedocs.io/en/latest/user/clients.html).
 
 
-**Version incluse :** 2.11.20220622~ynh1
+**Version incluse :** 2.11.20220622~ynh2
 
 **Démo :** https://gpodder.net
 
