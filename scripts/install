@@ -54,6 +54,10 @@ ynh_script_progression --message="Initializing Python virtualenv..." --weight=20
 
 set_up_virtualenv
 
+ynh_script_progression --message="Collecting static..."
+
+collect_static
+
 #=================================================
 # INITIALIZE DATABASE
 #=================================================
