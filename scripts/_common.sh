@@ -32,6 +32,13 @@ function set_up_virtualenv {
 	ynh_exec_warn_less ynh_exec_as "$app" "$install_dir/venv/bin/pip" --cache-dir "$install_dir/.cache/pip" install -U --requirement "$install_dir/requirements-ynh.txt"
 }
 
+function collect_static {
+	pushd $final_path || ynh_die
+		chown -R $app:$app $final_path
+		ynh_exec_warn_less ynh_exec_as $app $final_path/venv/bin/envdir $env_path $final_path/venv/bin/python $final_path/manage.py collectstatic
+	popd || ynh_die
+}
+
 function initialize_db {
 	perform_db_migrations
 	ynh_exec_warn_less ynh_exec_as "$app" "$install_dir/venv/bin/envdir" "$env_path" "$install_dir/venv/bin/python" "$install_dir/sources/manage.py" createsuperuser --username "$admin" --email "$admin_email" --noinput -v 0
