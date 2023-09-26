@@ -33,11 +33,11 @@ function set_up_virtualenv {
 
 	pushd $final_path || ynh_die
 		chown -R $app:$app $final_path
-		ynh_exec_warn_less ynh_exec_as $app python3 -m venv $final_path/venv
-		ynh_exec_warn_less ynh_exec_as $app $final_path/venv/bin/pip --cache-dir $final_path/.cache/pip install -U wheel pip --cache-dir $final_path/.cache/pip setuptools
-		ynh_exec_warn_less ynh_exec_as $app $final_path/venv/bin/pip --cache-dir $final_path/.cache/pip install -U --requirement $final_path/requirements.txt
-		ynh_exec_warn_less ynh_exec_as $app $final_path/venv/bin/pip --cache-dir $final_path/.cache/pip install -U --requirement $final_path/requirements-setup.txt
-		ynh_exec_warn_less ynh_exec_as $app $final_path/venv/bin/pip --cache-dir $final_path/.cache/pip install -U --requirement $final_path/requirements-ynh.txt
+		ynh_exec_as $app python3 -m venv $final_path/venv
+		ynh_exec_as $app $final_path/venv/bin/pip --cache-dir $final_path/.cache/pip install -U wheel pip --cache-dir $final_path/.cache/pip setuptools
+		ynh_exec_as $app $final_path/venv/bin/pip --cache-dir $final_path/.cache/pip install -U --requirement $final_path/requirements.txt
+		ynh_exec_as $app $final_path/venv/bin/pip --cache-dir $final_path/.cache/pip install -U --requirement $final_path/requirements-setup.txt
+		ynh_exec_as $app $final_path/venv/bin/pip --cache-dir $final_path/.cache/pip install -U --requirement $final_path/requirements-ynh.txt
 		set_permissions
 	popd || ynh_dies
 }
