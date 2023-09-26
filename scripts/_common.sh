@@ -5,7 +5,7 @@
 #=================================================
 
 # dependencies used by the app
-pkg_dependencies="acl python3 python3-dev python3-pip python3-venv postgresql postgresql-contrib libpq-dev redis-server libldap2-dev libsasl2-dev"
+pkg_dependencies="acl python3 python3-dev python3-pip python3-venv postgresql postgresql-contrib libpq-dev redis-server libldap2-dev libsasl2-dev libjpeg-dev"
 
 #=================================================
 # PERSONAL HELPERS
