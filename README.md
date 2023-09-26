@@ -19,7 +19,7 @@ If you don't have YunoHost, please consult [the guide](https://yunohost.org/#/in
 This is the webservice powering the https://gpodder.net website. It can be used to sync podcast subscriptions with [supported clients](https://gpoddernet.readthedocs.io/en/latest/user/clients.html).
 
 
-**Shipped version:** 2.11.20220622~ynh2
+**Shipped version:** 2.11.20221222~ynh1
 
 **Demo:** https://gpodder.net
 
