@@ -42,7 +42,7 @@ Edit files under `/opt/yunohost/APPDIR/envs/prod` to set environment variables. 
 * Official app website: <https://gpodder.net>
 * Official admin documentation: <https://gpoddernet.readthedocs.io/>
 * Upstream app code repository: <https://github.com/gpodder/mygpo>
-* YunoHost documentation for this app: <https://yunohost.org/app_mygpo>
+* YunoHost Store: <https://apps.yunohost.org/app/mygpo>
 * Report a bug: <https://github.com/YunoHost-Apps/mygpo_ynh/issues>
 
 ## Developer info
