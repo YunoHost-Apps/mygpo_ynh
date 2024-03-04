@@ -30,9 +30,9 @@ ynh_change_url_nginx_config
 ynh_script_progression --message="Updating $app's configuration files..." --weight=1
 
 mkdir -p "$env_path"
-echo "$new_domain" > "$env_path/envs/prod/DEFAULT_BASE_URL"
-echo "$app@$new_domain" > "$env_path/envs/prod/DEFAULT_FROM_EMAIL"
-echo "$app@$new_domain" > "$env_path/envs/prod/SERVER_EMAIL"
+echo "$new_domain" > "$env_path/DEFAULT_BASE_URL"
+echo "$app@$new_domain" > "$env_path/DEFAULT_FROM_EMAIL"
+echo "$app@$new_domain" > "$env_path/SERVER_EMAIL"
 
 set_permissions
 
