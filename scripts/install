@@ -15,7 +15,7 @@ admin_email=$(ynh_user_get_info --username="$admin" --key="mail")
 secret_key=$(ynh_string_random --length=64)
 staff_token=$(ynh_string_random --length=64)
 
-ynh_app_setting_set --app="$app" --key="random_key" --value="$secret_key"
+ynh_app_setting_set --app="$app" --key="secret_key" --value="$secret_key"
 
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE

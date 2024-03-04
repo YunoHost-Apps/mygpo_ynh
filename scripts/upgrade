@@ -8,6 +8,12 @@ source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
+# INITIALIZE AND STORE SETTINGS
+#=================================================
+
+admin_email=$(ynh_user_get_info --username="$admin" --key="mail")
+
+#=================================================
 # STOP SYSTEMD SERVICES
 #=================================================
 ynh_script_progression --message="Stopping $app's systemd services..." --weight=1
@@ -31,6 +37,12 @@ if [ -n "${data_path:-}" ]; then
 	ynh_app_setting_delete --app="$app" --key=data_path
 	ynh_app_setting_delete --app="$app" --key=db_pwd
 	ynh_app_setting_delete --app="$app" --key=admin_email
+fi
+
+if [[ -n "${random_key:-}" ]]; then
+	secret_key="$random_key"
+	ynh_app_setting_delete --app="$app" --key=random_key
+	ynh_app_setting_set --app="$app" --key=secret_key --value="$random_key"
 fi
 
 #=================================================
@@ -58,7 +70,6 @@ echo "django.core.mail.backends.console.EmailBackend" > "$env_path/EMAIL_BACKEND
 echo "$data_dir" > "$env_path/MEDIA_ROOT"
 echo "$secret_key" > "$env_path/SECRET_KEY"
 echo "$app@$domain" > "$env_path/SERVER_EMAIL"
-echo "$staff_token" > "$env_path/STAFF_TOKEN"
 
 set_permissions
 
