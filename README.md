@@ -27,16 +27,6 @@ This is the webservice powering the https://gpodder.net website. It can be used 
 
 ![Screenshot of mygpo (gPodder.net)](./doc/screenshots/screenshot1.png)
 
-## Disclaimers / important information
-
-## Limitations
-
-* The feed-parsing service is not included, https://feeds.gpodder.net is used
-
-## Configuration
-
-Edit files under `/opt/yunohost/APPDIR/envs/prod` to set environment variables. There is an admin interface at `yourdomain.tld/admin` that the admin user can log in to.
-
 ## Documentation and resources
 
 * Official app website: <https://gpodder.net>
