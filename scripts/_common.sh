@@ -27,6 +27,7 @@ function set_permissions {
 function set_up_virtualenv {
 	env_path=$install_dir/envs/prod
 	mkdir -p $env_path
+	ynh_add_config --template="requirements-ynh.txt" --destination="$install_dir/requirements-ynh.txt"
 
 	pushd $install_dir || ynh_die
 		chown -R $app:$app $install_dir
