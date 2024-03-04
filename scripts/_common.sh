@@ -27,14 +27,14 @@ function set_up_virtualenv {
 
 	ynh_exec_warn_less ynh_exec_as "$app" python3 -m venv "$install_dir/venv"
 	ynh_exec_warn_less ynh_exec_as "$app" "$install_dir/venv/bin/pip" --cache-dir "$install_dir/.cache/pip" install -U wheel pip --cache-dir "$install_dir/.cache/pip" setuptools
-	ynh_exec_warn_less ynh_exec_as "$app" "$install_dir/venv/bin/pip" --cache-dir "$install_dir/.cache/pip" install -U --requirement "$install_dir/source/requirements.txt"
-	ynh_exec_warn_less ynh_exec_as "$app" "$install_dir/venv/bin/pip" --cache-dir "$install_dir/.cache/pip" install -U --requirement "$install_dir/source/requirements-setup.txt"
+	ynh_exec_warn_less ynh_exec_as "$app" "$install_dir/venv/bin/pip" --cache-dir "$install_dir/.cache/pip" install -U --requirement "$install_dir/sources/requirements.txt"
+	ynh_exec_warn_less ynh_exec_as "$app" "$install_dir/venv/bin/pip" --cache-dir "$install_dir/.cache/pip" install -U --requirement "$install_dir/sources/requirements-setup.txt"
 	ynh_exec_warn_less ynh_exec_as "$app" "$install_dir/venv/bin/pip" --cache-dir "$install_dir/.cache/pip" install -U --requirement "$install_dir/requirements-ynh.txt"
 }
 
 function initialize_db {
 	perform_db_migrations
-	ynh_exec_warn_less ynh_exec_as "$app" "$install_dir/venv/bin/envdir" "$env_path" "$install_dir/venv/bin/python" "$install_dir/source/manage.py" createsuperuser --username "$admin" --email "$admin_email" --noinput -v 0
+	ynh_exec_warn_less ynh_exec_as "$app" "$install_dir/venv/bin/envdir" "$env_path" "$install_dir/venv/bin/python" "$install_dir/sources/manage.py" createsuperuser --username "$admin" --email "$admin_email" --noinput -v 0
 }
 
 function upgrade_db {
@@ -42,8 +42,8 @@ function upgrade_db {
 }
 
 function perform_db_migrations {
-	yes | ynh_exec_warn_less ynh_exec_as "$app" "$install_dir/venv/bin/envdir" "$env_path" "$install_dir/venv/bin/python" "$install_dir/source/manage.py" makemigrations --merge
-	ynh_exec_warn_less ynh_exec_as "$app" "$install_dir/venv/bin/envdir" "$env_path" "$install_dir/venv/bin/python" "$install_dir/source/manage.py" migrate
+	yes | ynh_exec_warn_less ynh_exec_as "$app" "$install_dir/venv/bin/envdir" "$env_path" "$install_dir/venv/bin/python" "$install_dir/sources/manage.py" makemigrations --merge
+	ynh_exec_warn_less ynh_exec_as "$app" "$install_dir/venv/bin/envdir" "$env_path" "$install_dir/venv/bin/python" "$install_dir/sources/manage.py" migrate
 }
 
 #=================================================

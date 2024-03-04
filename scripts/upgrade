@@ -45,13 +45,18 @@ if [[ -n "${random_key:-}" ]]; then
 	ynh_app_setting_set --app="$app" --key=secret_key --value="$random_key"
 fi
 
+if [ -f "$install_dir/requirements.txt" ]; then
+	# Move to $install_dir/sources
+	find "$install_dir" -maxdepth 1 -mindepth 1 -not -name envs -exec rm -rf {} +
+fi
+
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
 ynh_script_progression --message="Upgrading source files..." --weight=1
 
 # Download, check integrity, uncompress and patch the source from app.src
-ynh_setup_source --dest_dir="$install_dir/source" --full_replace=1
+ynh_setup_source --dest_dir="$install_dir/sources" --full_replace=1
 
 #=================================================
 # APP INITIAL CONFIGURATION
