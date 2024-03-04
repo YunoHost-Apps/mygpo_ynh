@@ -5,7 +5,7 @@ After=network.target postgresql.service redis.service __APP__.socket
 [Service]
 User=__APP__
 Group=__APP__
-WorkingDirectory=__INSTALL_DIR__
+WorkingDirectory=__INSTALL_DIR__/source
 
 ExecStart=__INSTALL_DIR__/venv/bin/envdir __INSTALL_DIR__/envs/prod __INSTALL_DIR__/venv/bin/celery -A __APP__ worker -l info -Ofair
 ExecReload=/bin/kill -s HUP $MAINPID

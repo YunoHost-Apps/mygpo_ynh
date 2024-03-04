@@ -7,9 +7,9 @@ Requires=__APP__.socket
 Type=notify
 User=__APP__
 Group=__APP__
-WorkingDirectory=__INSTALL_DIR__/
+WorkingDirectory=__INSTALL_DIR__/source/
 
-ExecStart=__INSTALL_DIR__/venv/bin/envdir __INSTALL_DIR__/envs/prod __INSTALL_DIR__/venv/bin/gunicorn -c __INSTALL_DIR__/conf/gunicorn.conf.py mygpo.wsgi:application --bind unix:/run/__APP__.sock
+ExecStart=__INSTALL_DIR__/venv/bin/envdir __INSTALL_DIR__/envs/prod __INSTALL_DIR__/venv/bin/gunicorn -c __INSTALL_DIR__/source/conf/gunicorn.conf.py mygpo.wsgi:application --bind unix:/run/__APP__.sock
 ExecReload=/bin/kill -s HUP $MAINPID
 Restart=on-failure
 KillMode=mixed
