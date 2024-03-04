@@ -25,7 +25,7 @@ systemctl disable "$app-celery" --quiet
 #=================================================
 # ENSURE DOWNWARD COMPATIBILITY
 #=================================================
-ynh_script_progression --message="Ensuring downward compatibility..." --time --weight=1
+ynh_script_progression --message="Ensuring downward compatibility..." --weight=1
 
 if [ -n "${data_path:-}" ]; then
 	ynh_app_setting_delete --app="$app" --key=data_path
