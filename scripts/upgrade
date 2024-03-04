@@ -46,6 +46,7 @@ ynh_setup_source --dest_dir="$install_dir/source" --full_replace=1
 #=================================================
 ynh_script_progression --message="Adding $app's configuration files..." --weight=1
 
+mkdir -p "$env_path"
 echo "$admin <$admin_email>" > "$env_path/ADMINS"
 echo "None" > "$env_path/BROKER_POOL_LIMIT"
 echo "redis://localhost:6379" > "$env_path/BROKER_URL"
@@ -74,6 +75,8 @@ set_up_virtualenv
 ynh_script_progression --message="Performing database migrations..." --weight=2
 
 upgrade_db
+
+set_permissions
 
 #=================================================
 # REAPPLY SYSTEM CONFIGURATIONS

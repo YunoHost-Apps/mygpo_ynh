@@ -30,7 +30,6 @@ function set_up_virtualenv {
 	ynh_exec_warn_less ynh_exec_as "$app" "$install_dir/venv/bin/pip" --cache-dir "$install_dir/.cache/pip" install -U --requirement "$install_dir/source/requirements.txt"
 	ynh_exec_warn_less ynh_exec_as "$app" "$install_dir/venv/bin/pip" --cache-dir "$install_dir/.cache/pip" install -U --requirement "$install_dir/source/requirements-setup.txt"
 	ynh_exec_warn_less ynh_exec_as "$app" "$install_dir/venv/bin/pip" --cache-dir "$install_dir/.cache/pip" install -U --requirement "$install_dir/requirements-ynh.txt"
-	set_permissions
 }
 
 function initialize_db {
