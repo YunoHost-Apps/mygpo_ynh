@@ -39,20 +39,34 @@ fi
 ynh_script_progression --message="Upgrading source files..." --weight=1
 
 # Download, check integrity, uncompress and patch the source from app.src
-ynh_setup_source --dest_dir="$install_dir"
+ynh_setup_source --dest_dir="$install_dir/source" --full_replace=1
+
+#=================================================
+# APP INITIAL CONFIGURATION
+#=================================================
+ynh_script_progression --message="Adding $app's configuration files..." --weight=1
+
+echo "$admin <$admin_email>" > "$env_path/ADMINS"
+echo "None" > "$env_path/BROKER_POOL_LIMIT"
+echo "redis://localhost:6379" > "$env_path/BROKER_URL"
+echo "postgres://$db_user:$db_pwd@localhost:5432/$db_name" > "$env_path/DATABASE_URL"
+echo "False" > "$env_path/DEBUG"
+echo "$domain" > "$env_path/DEFAULT_BASE_URL"
+echo "$app@$domain" > "$env_path/DEFAULT_FROM_EMAIL"
+echo "django.core.mail.backends.console.EmailBackend" > "$env_path/EMAIL_BACKEND"
+echo "$data_dir" > "$env_path/MEDIA_ROOT"
+echo "$secret_key" > "$env_path/SECRET_KEY"
+echo "$app@$domain" > "$env_path/SERVER_EMAIL"
+echo "$staff_token" > "$env_path/STAFF_TOKEN"
 
 set_permissions
 
-
-#=================================================
-# SPECIFIC UPGRADE
 #=================================================
 # UPDATE VIRTUALENV
 #=================================================
 ynh_script_progression --message="Upgrading Python virtualenv..." --weight=2
 
 set_up_virtualenv
-
 
 #=================================================
 # PERFORM DATABASE MIGRATIONS
@@ -71,13 +85,14 @@ ynh_add_nginx_config
 
 # Create a dedicated systemd config
 ynh_add_systemd_config
-ynh_add_systemd_config --service="$app-socket" --template systemd.socket
+yunohost service add "$app" --description="Manage podcast subscriptions, and sync them between apps and devices" --log="/var/log/$app/$app.log"
 ynh_add_systemd_config --service="$app-celery" --template systemd-celery.service
 ynh_add_systemd_config --service="$app-beat" --template systemd-beat.service
+# Some workaround bc ynh_add_system_config doesn't know sockets
+ynh_add_systemd_config --service="$app-socket" --template systemd.socket
 systemctl disable "$app-socket.service" --quiet
 mv "/etc/systemd/system/$app-socket.service" "/etc/systemd/system/$app.socket"
 systemctl daemon-reload --quiet
-yunohost service add "$app" --description="Manage podcast subscriptions, and sync them between apps and devices" --log="/var/log/$app/$app.log"
 
 #=================================================
 # START SYSTEMD SERVICE

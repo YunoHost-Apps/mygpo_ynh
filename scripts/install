@@ -25,8 +25,6 @@ ynh_script_progression --message="Setting up source files..." --weight=1
 # Download, check integrity, uncompress and patch the source from app.src
 ynh_setup_source --dest_dir="$install_dir/source"
 
-set_permissions
-
 #=================================================
 # APP INITIAL CONFIGURATION
 #=================================================
@@ -44,6 +42,8 @@ echo "$data_dir" > "$env_path/MEDIA_ROOT"
 echo "$secret_key" > "$env_path/SECRET_KEY"
 echo "$app@$domain" > "$env_path/SERVER_EMAIL"
 echo "$staff_token" > "$env_path/STAFF_TOKEN"
+
+set_permissions
 
 #=================================================
 # SET UP VIRTUALENV
