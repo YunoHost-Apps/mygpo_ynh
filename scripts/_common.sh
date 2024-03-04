@@ -4,77 +4,61 @@
 # COMMON VARIABLES
 #=================================================
 
-# dependencies used by the app
-pkg_dependencies="acl libffi-dev libjpeg-dev libwebp-dev python3 python3-dev python3-pip python3-venv postgresql postgresql-contrib libpq-dev redis-server libldap2-dev libsasl2-dev"
-
 #=================================================
 # PERSONAL HELPERS
 #=================================================
 
 function set_permissions {
-	mkdir -p $datadir
+	mkdir -p $data_dir
 
-	env_path=$final_path/envs/prod
+	env_path=$install_dir/envs/prod
 	mkdir -p $env_path
 
-	chown -R $app:$app $datadir
-	chmod o-rwx $datadir
-	setfacl -n -R -m u:www-data:rx -m d:u:www-data:rx $datadir
+	chown -R $app:$app $data_dir
+	chmod o-rwx $data_dir
+	setfacl -n -R -m u:www-data:rx -m d:u:www-data:rx $data_dir
 
-	chown -R root:$app $final_path
-	chmod -R g=u,g-w,o-rwx $final_path
-	setfacl -n -R -m user:www-data:rx -m default:user:www-data:rx $final_path
-	setfacl -n -R -m user:www-data:- -m default:user:www-data:- $final_path/envs
+	chown -R root:$app $install_dir
+	chmod -R g=u,g-w,o-rwx $install_dir
+	setfacl -n -R -m user:www-data:rx -m default:user:www-data:rx $install_dir
+	setfacl -n -R -m user:www-data:- -m default:user:www-data:- $install_dir/envs
 }
 
 function set_up_virtualenv {
-	env_path=$final_path/envs/prod
+	env_path=$install_dir/envs/prod
 	mkdir -p $env_path
 
-	pushd $final_path || ynh_die
-		chown -R $app:$app $final_path
-		ynh_exec_warn_less ynh_exec_as $app python3 -m venv $final_path/venv
-		ynh_exec_warn_less ynh_exec_as $app $final_path/venv/bin/pip --cache-dir $final_path/.cache/pip install -U wheel pip --cache-dir $final_path/.cache/pip setuptools
-		ynh_exec_warn_less ynh_exec_as $app $final_path/venv/bin/pip --cache-dir $final_path/.cache/pip install -U --requirement $final_path/requirements.txt
-		ynh_exec_warn_less ynh_exec_as $app $final_path/venv/bin/pip --cache-dir $final_path/.cache/pip install -U --requirement $final_path/requirements-setup.txt
-		ynh_exec_warn_less ynh_exec_as $app $final_path/venv/bin/pip --cache-dir $final_path/.cache/pip install -U --requirement $final_path/requirements-ynh.txt
+	pushd $install_dir || ynh_die
+		chown -R $app:$app $install_dir
+		ynh_exec_warn_less ynh_exec_as $app python3 -m venv $install_dir/venv
+		ynh_exec_warn_less ynh_exec_as $app $install_dir/venv/bin/pip --cache-dir $install_dir/.cache/pip install -U wheel pip --cache-dir $install_dir/.cache/pip setuptools
+		ynh_exec_warn_less ynh_exec_as $app $install_dir/venv/bin/pip --cache-dir $install_dir/.cache/pip install -U --requirement $install_dir/requirements.txt
+		ynh_exec_warn_less ynh_exec_as $app $install_dir/venv/bin/pip --cache-dir $install_dir/.cache/pip install -U --requirement $install_dir/requirements-setup.txt
+		ynh_exec_warn_less ynh_exec_as $app $install_dir/venv/bin/pip --cache-dir $install_dir/.cache/pip install -U --requirement $install_dir/requirements-ynh.txt
 		set_permissions
 	popd || ynh_dies
 }
 
 function initialize_db {
-	pushd $final_path || ynh_die
-		chown -R $app:$app $final_path
+	pushd $install_dir || ynh_die
+		chown -R $app:$app $install_dir
 		perform_db_migrations
-		ynh_exec_warn_less ynh_exec_as $app $final_path/venv/bin/envdir $env_path $final_path/venv/bin/python $final_path/manage.py createsuperuser --username "$admin" --email "$admin_email" --noinput -v 0
+		ynh_exec_warn_less ynh_exec_as $app $install_dir/venv/bin/envdir $env_path $install_dir/venv/bin/python $install_dir/manage.py createsuperuser --username "$admin" --email "$admin_email" --noinput -v 0
 		set_permissions
 	popd || ynh_die
 }
 
 function upgrade_db {
-	pushd $final_path || ynh_die
-		chown -R $app:$app $final_path
+	pushd $install_dir || ynh_die
+		chown -R $app:$app $install_dir
 		perform_db_migrations
 		set_permissions
 	popd || ynh_die
 }
 
 function perform_db_migrations {
-	echo "y" | ynh_exec_warn_less ynh_exec_as $app $final_path/venv/bin/envdir $env_path $final_path/venv/bin/python $final_path/manage.py makemigrations --merge
-	ynh_exec_warn_less ynh_exec_as $app $final_path/venv/bin/envdir $env_path $final_path/venv/bin/python $final_path/manage.py migrate
-}
-
-function get_app_settings {
-	domain=$(ynh_app_setting_get --app=$app --key=domain)
-	path_url=$(ynh_app_setting_get --app=$app --key=path)
-	final_path=$(ynh_app_setting_get --app=$app --key=final_path)
-	datadir=$(ynh_app_setting_get --app=$app --key=datadir)
-	admin=$(ynh_app_setting_get --app=$app --key=admin)
-	secret_key=$(ynh_app_setting_get --app=$app --key=secret_key)
-	admin_email=$(ynh_user_get_info --username=$admin --key="mail")
-	db_name=$(ynh_app_setting_get --app=$app --key=db_name)
-	db_user="$db_name"
-	db_pwd=$(ynh_app_setting_get --app=$app --key=psqlpwd)
+	echo "y" | ynh_exec_warn_less ynh_exec_as $app $install_dir/venv/bin/envdir $env_path $install_dir/venv/bin/python $install_dir/manage.py makemigrations --merge
+	ynh_exec_warn_less ynh_exec_as $app $install_dir/venv/bin/envdir $env_path $install_dir/venv/bin/python $install_dir/manage.py migrate
 }
 
 #=================================================

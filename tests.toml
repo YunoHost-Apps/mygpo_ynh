@@ -1,0 +1,9 @@
+#:schema https://raw.githubusercontent.com/YunoHost/apps/master/schemas/tests.v1.schema.json
+
+test_format = 1.0
+
+[default]
+
+    test_upgrade_from.a50d46ae3a01d8a5b08ca9f9e62bfc9269fdedfa.name = "2.11.1~ynh3"
+    test_upgrade_from.59b41b65dc33c3da471175002f37576ff460dc46.name = "2.11.20210519~ynh1"
+    test_upgrade_from.8284155ea371f4b8a9f0c333d486c5a2342acfae.name = "2.11.20211020~ynh1"

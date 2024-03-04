@@ -1,8 +1,6 @@
 #!/bin/bash
 
 #=================================================
-# GENERIC START
-#=================================================
 # IMPORT GENERIC HELPERS
 #=================================================
 
@@ -10,126 +8,42 @@ source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
-# MANAGE SCRIPT FAILURE
+# INITIALIZE AND STORE SETTINGS
 #=================================================
 
-ynh_clean_setup () {
-	ynh_clean_check_starting
-}
-# Exit if an error occurs during the execution of the script
-ynh_abort_if_errors
-
-#=================================================
-# RETRIEVE ARGUMENTS FROM THE MANIFEST
-#=================================================
-
-domain=$YNH_APP_ARG_DOMAIN
-path_url="/"
-is_public=$YNH_APP_ARG_IS_PUBLIC
-admin=$YNH_APP_ARG_ADMIN
-
-app=$YNH_APP_INSTANCE_NAME
-
-admin_email=$(ynh_user_get_info --username=$admin --key="mail")
+admin_email=$(ynh_user_get_info --username="$admin" --key="mail")
 secret_key=$(ynh_string_random --length=64)
 staff_token=$(ynh_string_random --length=64)
 
-#=================================================
-# CHECK IF THE APP CAN BE INSTALLED WITH THESE ARGS
-#=================================================
-ynh_script_progression --message="Validating installation parameters..." --weight=1
-
-final_path=/opt/yunohost/$app
-test ! -e "$final_path" || ynh_die --message="This path already contains a folder"
-
-# Register (book) web path
-ynh_webpath_register --app=$app --domain=$domain --path_url=$path_url
-
-#=================================================
-# STORE SETTINGS FROM MANIFEST
-#=================================================
-ynh_script_progression --message="Storing installation settings..." --weight=1
-
-ynh_app_setting_set --app=$app --key=domain --value=$domain
-ynh_app_setting_set --app=$app --key=path --value=$path_url
-ynh_app_setting_set --app=$app --key=admin --value=$admin
-ynh_app_setting_set --app=$app --key=random_key --value=$secret_key
-
-#=================================================
-# STANDARD MODIFICATIONS
-#=================================================
-# INSTALL DEPENDENCIES
-#=================================================
-ynh_script_progression --message="Installing dependencies..." --weight=3
-
-ynh_install_app_dependencies $pkg_dependencies
-
-#=================================================
-# CREATE DEDICATED USER
-#=================================================
-ynh_script_progression --message="Configuring system user..." --weight=1
-
-# Create a system user
-ynh_system_user_create --username=$app --home_dir=$final_path
-
-#=================================================
-# CREATE A POSTGRESQL DATABASE
-#=================================================
-ynh_script_progression --message="Creating a PostgreSQL database..."
-
-db_name=$(ynh_sanitize_dbid --db_name=$app)
-db_user=$db_name
-ynh_app_setting_set --app=$app --key=db_name --value=$db_name
-ynh_psql_test_if_first_run
-ynh_psql_setup_db --db_user=$db_user --db_name=$db_name
-ynh_psql_execute_as_root --sql="ALTER ROLE $db_user SET statement_timeout = 5000;" --database=$db_name
+ynh_app_setting_set --app="$app" --key="random_key" --value="$secret_key"
 
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
 ynh_script_progression --message="Setting up source files..." --weight=1
 
-ynh_app_setting_set --app=$app --key=final_path --value=$final_path
 # Download, check integrity, uncompress and patch the source from app.src
-ynh_setup_source --dest_dir="$final_path"
-
-#=================================================
-# NGINX CONFIGURATION
-#=================================================
-ynh_script_progression --message="Configuring NGINX web server..." --weight=1
-
-# Create a dedicated NGINX config
-ynh_add_nginx_config
-
-#=================================================
-# SPECIFIC SETUP
-#=================================================
-# CREATE DATA DIRECTORY
-#=================================================
-ynh_script_progression --message="Creating a data directory..."
-
-datadir=/home/yunohost.app/$app
-ynh_app_setting_set --app=$app --key=datadir --value=$datadir
+ynh_setup_source --dest_dir="$install_dir"
 
 set_permissions
 
 #=================================================
-# ENVDIR CONFIGURATION
+# APP INITIAL CONFIGURATION
 #=================================================
-ynh_script_progression --message="Building configuration..." --weight=1
+ynh_script_progression --message="Adding $app's configuration files..." --weight=1
 
-echo "$admin <$admin_email>" > $env_path/ADMINS
-echo "None" > $env_path/BROKER_POOL_LIMIT
-echo "redis://localhost:6379" > $env_path/BROKER_URL
-echo "postgres://$db_user:$db_pwd@localhost:5432/$db_name" > $env_path/DATABASE_URL
-echo False > $env_path/DEBUG
-echo $domain > $env_path/DEFAULT_BASE_URL
-echo "$app@$domain" > $env_path/DEFAULT_FROM_EMAIL
-echo "django.core.mail.backends.console.EmailBackend" > $env_path/EMAIL_BACKEND
-echo "$datadir" > $env_path/MEDIA_ROOT
-echo $secret_key > $env_path/SECRET_KEY
-echo "$app@$domain" > $env_path/SERVER_EMAIL
-echo $staff_token > $env_path/STAFF_TOKEN
+echo "$admin <$admin_email>" > "$env_path/ADMINS"
+echo "None" > "$env_path/BROKER_POOL_LIMIT"
+echo "redis://localhost:6379" > "$env_path/BROKER_URL"
+echo "postgres://$db_user:$db_pwd@localhost:5432/$db_name" > "$env_path/DATABASE_URL"
+echo "False" > "$env_path/DEBUG"
+echo "$domain" > "$env_path/DEFAULT_BASE_URL"
+echo "$app@$domain" > "$env_path/DEFAULT_FROM_EMAIL"
+echo "django.core.mail.backends.console.EmailBackend" > "$env_path/EMAIL_BACKEND"
+echo "$data_dir" > "$env_path/MEDIA_ROOT"
+echo "$secret_key" > "$env_path/SECRET_KEY"
+echo "$app@$domain" > "$env_path/SERVER_EMAIL"
+echo "$staff_token" > "$env_path/STAFF_TOKEN"
 
 #=================================================
 # SET UP VIRTUALENV
@@ -143,70 +57,39 @@ set_up_virtualenv
 #=================================================
 ynh_script_progression --message="Initializing database..."
 
+ynh_psql_execute_as_root --sql="ALTER ROLE $db_user SET statement_timeout = 5000;" --database="$db_name"
+
 initialize_db
 
 #=================================================
-# SETUP SYSTEMD
+# SYSTEM CONFIGURATION
 #=================================================
-ynh_script_progression --message="Configuring systemd services..." --weight=1
+ynh_script_progression --message="Adding system configurations related to $app..." --weight=1
+
+# Create a dedicated NGINX config
+ynh_add_nginx_config
 
 # Create a dedicated systemd config
 ynh_add_systemd_config
-ynh_add_systemd_config --service="$app-socket" --template systemd.socket
+yunohost service add "$app" --description="Manage podcast subscriptions, and sync them between apps and devices" --log="/var/log/$app/$app.log"
 ynh_add_systemd_config --service="$app-celery" --template systemd-celery.service
 ynh_add_systemd_config --service="$app-beat" --template systemd-beat.service
+# Some workaround bc ynh_add_system_config doesn't know sockets
+ynh_add_systemd_config --service="$app-socket" --template systemd.socket
 systemctl disable "$app-socket.service" --quiet
 mv "/etc/systemd/system/$app-socket.service" "/etc/systemd/system/$app.socket"
 systemctl daemon-reload --quiet
 
 #=================================================
-# GENERIC FINALIZATION
-#=================================================
-# INTEGRATE SERVICE IN YUNOHOST
-#=================================================
-ynh_script_progression --message="Integrating service in YunoHost..." --weight=1
-
-yunohost service add $app --description="Manage podcast subscriptions, and sync them between apps and devices" --log="/var/log/$app/$app.log"
-
-#=================================================
 # START SYSTEMD SERVICE
 #=================================================
-ynh_script_progression --message="Starting systemd services..." --weight=1
+ynh_script_progression --message="Starting $app's systemd services..." --weight=1
 
 # Start systemd services
-ynh_systemd_action --service_name=$app.socket --action="start" --log_path="/var/log/$app/$app.log"
-ynh_systemd_action --service_name=$app --action="start" --log_path="/var/log/$app/$app.log"
-ynh_systemd_action --service_name=$app-celery --action="start" --log_path="/var/log/$app/$app.log"
-ynh_systemd_action --service_name=$app-beat --action="start" --log_path="/var/log/$app/$app.log"
-
-#=================================================
-# SETUP SSOWAT
-#=================================================
-ynh_script_progression --message="Configuring permissions..." --weight=1
-
-# Everyone can access to the api part
-# We don't want to display the tile in the sso so we put --show_tile="false"
-# And we don't want that the YunoHost Admin can remove visitors group to this permission, so we put --protected="true"
-ynh_permission_create --permission="api" --url="/api" -A "/clientconfig.json" "/subscriptions" "/suggestions"  --allowed="visitors" --show_tile="false" --protected="true"
-ynh_permission_create --permission="api-noauth" --url="/toplist" -A "/api/2/data" "/api/2/tag" "/api/2/tags" "/search.opml" "/search.json" "/search.jsonp" "/search.txt" "/search.xml" "/toplist.opml"  --show_tile="false"
-ynh_permission_create --permission="api-lists" --url="/api/2/lists"  --show_tile="false"
-
-# Make app public if necessary
-if [ $is_public -eq 1 ]
-then
-	# Everyone can access the app.
-	# The "main" permission is automatically created before the install script.
-	ynh_permission_update --permission="main" --add="visitors"
-	ynh_permission_update --permission="api-noauth" --add="visitors"
-	ynh_permission_update --permission="api-lists" --add="visitors"
-fi
-
-#=================================================
-# RELOAD NGINX
-#=================================================
-ynh_script_progression --message="Reloading NGINX web server..." --weight=1
-
-ynh_systemd_action --service_name=nginx --action=reload
+ynh_systemd_action --service_name="$app.socket" --action="start" --log_path="/var/log/$app/$app.log"
+ynh_systemd_action --service_name="$app" --action="start" --log_path="/var/log/$app/$app.log"
+ynh_systemd_action --service_name="$app-celery" --action="start" --log_path="/var/log/$app/$app.log"
+ynh_systemd_action --service_name="$app-beat" --action="start" --log_path="/var/log/$app/$app.log"
 
 #=================================================
 # END OF SCRIPT
