@@ -87,6 +87,10 @@ ynh_script_progression --message="Upgrading Python virtualenv..." --weight=2
 
 set_up_virtualenv
 
+ynh_script_progression --message="Collecting static..."
+
+collect_static
+
 #=================================================
 # PERFORM DATABASE MIGRATIONS
 #=================================================
