@@ -1,7 +1,0 @@
-SOURCE_URL=https://github.com/gpodder/mygpo/archive/80c41dc0c9a58dc0e85f6ef56662cdfd0d6e3b16.tar.gz
-SOURCE_SUM=cce51ef812e5a692ea38b82cb559a4982dcf76ad34d6adf73aff2c5299cb5573
-SOURCE_SUM_PRG=sha256sum
-SOURCE_FORMAT=tar.gz
-SOURCE_IN_SUBDIR=true
-SOURCE_FILENAME=
-SOURCE_EXTRACT=true
