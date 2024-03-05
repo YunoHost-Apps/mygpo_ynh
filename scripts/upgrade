@@ -46,8 +46,10 @@ if [[ -n "${random_key:-}" ]]; then
 fi
 
 if [ -f "$install_dir/requirements.txt" ]; then
+	mkdir "$install_dir/sources"
 	# Move to $install_dir/sources
-	find "$install_dir" -maxdepth 1 -mindepth 1 -not -name envs -exec rm -rf {} +
+	find "$install_dir" -maxdepth 1 -mindepth 1 -not -name sources -exec mv {} "$install_dir/sources" +
+	mv "$install_dir/sources/envs" "$install_dir"
 fi
 
 #=================================================
