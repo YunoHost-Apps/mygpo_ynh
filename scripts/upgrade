@@ -1,8 +1,6 @@
 #!/bin/bash
 
 #=================================================
-# GENERIC START
-#=================================================
 # IMPORT GENERIC HELPERS
 #=================================================
 
@@ -10,105 +8,78 @@ source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
-# LOAD SETTINGS
+# INITIALIZE AND STORE SETTINGS
 #=================================================
-ynh_script_progression --message="Loading installation settings..." --weight=1
 
-app=$YNH_APP_INSTANCE_NAME
+admin_email=$(ynh_user_get_info --username="$admin" --key="mail")
 
-get_app_settings
-
-#=================================================
-# CHECK VERSION
-#=================================================
-ynh_script_progression --message="Checking version..."
-
-upgrade_type=$(ynh_check_app_version_changed)
-
-#=================================================
-# BACKUP BEFORE UPGRADE THEN ACTIVE TRAP
-#=================================================
-ynh_script_progression --message="Backing up the app before upgrading (may take a while)..." --weight=1
-
-# Backup the current version of the app
-ynh_backup_before_upgrade
-ynh_clean_setup () {
-	ynh_clean_check_starting
-	# Restore it if the upgrade fails
-	ynh_restore_upgradebackup
-}
-# Exit if an error occurs during the execution of the script
-ynh_abort_if_errors
-
-#=================================================
-# STANDARD UPGRADE STEPS
 #=================================================
 # STOP SYSTEMD SERVICES
 #=================================================
-ynh_script_progression --message="Stopping systemd services..." --weight=1
+ynh_script_progression --message="Stopping $app's systemd services..." --weight=1
 
-ynh_systemd_action --service_name=$app.socket --action="stop" --log_path="/var/log/$app/$app.log"
-ynh_systemd_action --service_name=$app --action="stop" --log_path="/var/log/$app/$app.log"
-ynh_systemd_action --service_name=$app-beat --action="stop" --log_path="/var/log/$app/$app.log"
-ynh_systemd_action --service_name=$app-celery --action="stop" --log_path="/var/log/$app/$app.log"
+ynh_systemd_action --service_name="$app.socket" --action="stop" --log_path="/var/log/$app/$app.log"
+ynh_systemd_action --service_name="$app" --action="stop" --log_path="/var/log/$app/$app.log"
+ynh_systemd_action --service_name="$app-beat" --action="stop" --log_path="/var/log/$app/$app.log"
+ynh_systemd_action --service_name="$app-celery" --action="stop" --log_path="/var/log/$app/$app.log"
 
-systemctl disable $app.socket --quiet
-systemctl disable $app --quiet
-systemctl disable $app-beat --quiet
-systemctl disable $app-celery --quiet
+systemctl disable "$app.socket" --quiet
+systemctl disable "$app" --quiet
+systemctl disable "$app-beat" --quiet
+systemctl disable "$app-celery" --quiet
 
 #=================================================
 # ENSURE DOWNWARD COMPATIBILITY
 #=================================================
-ynh_script_progression --message="Ensuring downward compatibility..." --time --weight=1
+ynh_script_progression --message="Ensuring downward compatibility..." --weight=1
 
-if [ -z "$datadir" ]; then
-	datadir=$(ynh_app_setting_get --app=$app --key=data_path)
-	ynh_app_setting_set --app=$app --key=datadir --value=$datadir
-	ynh_app_setting_delete --app=$app --key=data_path
-	ynh_app_setting_delete --app=$app --key=db_pwd
-	ynh_app_setting_delete --app=$app --key=admin_email
+if [ -n "${data_path:-}" ]; then
+	ynh_app_setting_delete --app="$app" --key=data_path
+	ynh_app_setting_delete --app="$app" --key=db_pwd
+	ynh_app_setting_delete --app="$app" --key=admin_email
 fi
 
-#=================================================
-# CREATE DEDICATED USER
-#=================================================
-ynh_script_progression --message="Making sure dedicated system user exists..." --weight=1
+if [[ -n "${random_key:-}" ]]; then
+	secret_key="$random_key"
+	ynh_app_setting_delete --app="$app" --key=random_key
+	ynh_app_setting_set --app="$app" --key=secret_key --value="$random_key"
+fi
 
-# Create a dedicated user (if not existing)
-ynh_system_user_create --username=$app --home_dir=$final_path
+if [ -f "$install_dir/requirements.txt" ]; then
+	mkdir "$install_dir/sources"
+	# Move to $install_dir/sources
+	find "$install_dir" -maxdepth 1 -mindepth 1 -not -name sources -exec mv -t "$install_dir/sources" {} +
+	mv "$install_dir/sources/envs" "$install_dir"
+fi
 
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
+ynh_script_progression --message="Upgrading source files..." --weight=1
 
-if [ "$upgrade_type" == "UPGRADE_APP" ]
-then
-	ynh_script_progression --message="Upgrading source files..." --weight=1
+# Download, check integrity, uncompress and patch the source from app.src
+ynh_setup_source --dest_dir="$install_dir/sources" --full_replace=1
 
-	# Download, check integrity, uncompress and patch the source from app.src
-	ynh_setup_source --dest_dir="$final_path"
-fi
+#=================================================
+# APP INITIAL CONFIGURATION
+#=================================================
+ynh_script_progression --message="Adding $app's configuration files..." --weight=1
+
+mkdir -p "$env_path"
+echo "$admin <$admin_email>" > "$env_path/ADMINS"
+echo "None" > "$env_path/BROKER_POOL_LIMIT"
+echo "redis://localhost:6379" > "$env_path/BROKER_URL"
+echo "postgres://$db_user:$db_pwd@localhost:5432/$db_name" > "$env_path/DATABASE_URL"
+echo "False" > "$env_path/DEBUG"
+echo "$domain" > "$env_path/DEFAULT_BASE_URL"
+echo "$app@$domain" > "$env_path/DEFAULT_FROM_EMAIL"
+echo "django.core.mail.backends.console.EmailBackend" > "$env_path/EMAIL_BACKEND"
+echo "$data_dir" > "$env_path/MEDIA_ROOT"
+echo "$secret_key" > "$env_path/SECRET_KEY"
+echo "$app@$domain" > "$env_path/SERVER_EMAIL"
 
 set_permissions
 
-#=================================================
-# UPGRADE DEPENDENCIES
-#=================================================
-ynh_script_progression --message="Upgrading dependencies..." --weight=1
-
-ynh_install_app_dependencies $pkg_dependencies
-
-#=================================================
-# NGINX CONFIGURATION
-#=================================================
-ynh_script_progression --message="Upgrading NGINX web server configuration..." --weight=1
-
-# Create a dedicated NGINX config
-ynh_add_nginx_config
-
-#=================================================
-# SPECIFIC UPGRADE
 #=================================================
 # UPDATE VIRTUALENV
 #=================================================
@@ -123,45 +94,36 @@ ynh_script_progression --message="Performing database migrations..." --weight=2
 
 upgrade_db
 
+set_permissions
+
 #=================================================
-# SETUP SYSTEMD
+# REAPPLY SYSTEM CONFIGURATIONS
 #=================================================
-ynh_script_progression --message="Upgrading systemd configuration..." --weight=1
+ynh_script_progression --message="Upgrading system configurations related to $app..." --weight=1
+
+# Create a dedicated NGINX config
+ynh_add_nginx_config
 
 # Create a dedicated systemd config
 ynh_add_systemd_config
-ynh_add_systemd_config --service="$app-socket" --template systemd.socket
+yunohost service add "$app" --description="Manage podcast subscriptions, and sync them between apps and devices" --log="/var/log/$app/$app.log"
 ynh_add_systemd_config --service="$app-celery" --template systemd-celery.service
 ynh_add_systemd_config --service="$app-beat" --template systemd-beat.service
+# Some workaround bc ynh_add_system_config doesn't know sockets
+ynh_add_systemd_config --service="$app-socket" --template systemd.socket
 systemctl disable "$app-socket.service" --quiet
 mv "/etc/systemd/system/$app-socket.service" "/etc/systemd/system/$app.socket"
 systemctl daemon-reload --quiet
 
 #=================================================
-# GENERIC FINALIZATION
-#=================================================
-# INTEGRATE SERVICE IN YUNOHOST
-#=================================================
-ynh_script_progression --message="Integrating service in YunoHost..." --weight=1
-
-yunohost service add $app --description="Manage podcast subscriptions, and sync them between apps and devices" --log="/var/log/$app/$app.log"
-
-#=================================================
 # START SYSTEMD SERVICE
 #=================================================
-ynh_script_progression --message="Starting systemd services..." --weight=1
+ynh_script_progression --message="Starting $app's systemd service..." --weight=1
 
-ynh_systemd_action --service_name=$app.socket --action="start" --log_path="/var/log/$app/$app.log"
-ynh_systemd_action --service_name=$app --action="start" --log_path="/var/log/$app/$app.log"
-ynh_systemd_action --service_name=$app-celery --action="start" --log_path="/var/log/$app/$app.log"
-ynh_systemd_action --service_name=$app-beat --action="start" --log_path="/var/log/$app/$app.log"
-
-#=================================================
-# RELOAD NGINX
-#=================================================
-ynh_script_progression --message="Reloading NGINX web server..." --weight=1
-
-ynh_systemd_action --service_name=nginx --action=reload
+ynh_systemd_action --service_name="$app.socket" --action="start" --log_path="/var/log/$app/$app.log"
+ynh_systemd_action --service_name="$app" --action="start" --log_path="/var/log/$app/$app.log"
+ynh_systemd_action --service_name="$app-celery" --action="start" --log_path="/var/log/$app/$app.log"
+ynh_systemd_action --service_name="$app-beat" --action="start" --log_path="/var/log/$app/$app.log"
 
 #=================================================
 # END OF SCRIPT
