@@ -5,7 +5,7 @@ NON debe editarse manualmente.
 
 # mygpo (gPodder.net) para YunoHost
 
-[![Nivel de integración](https://dash.yunohost.org/integration/mygpo.svg)](https://dash.yunohost.org/appci/app/mygpo) ![Estado de funcionamento](https://ci-apps.yunohost.org/ci/badges/mygpo.status.svg) ![Estado de mantemento](https://ci-apps.yunohost.org/ci/badges/mygpo.maintain.svg)
+[![Nivel de integración](https://dash.yunohost.org/integration/mygpo.svg)](https://ci-apps.yunohost.org/ci/apps/mygpo/) ![Estado de funcionamento](https://ci-apps.yunohost.org/ci/badges/mygpo.status.svg) ![Estado de mantemento](https://ci-apps.yunohost.org/ci/badges/mygpo.maintain.svg)
 
 [![Instalar mygpo (gPodder.net) con YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=mygpo)
 

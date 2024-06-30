@@ -5,7 +5,7 @@ It shall NOT be edited by hand.
 
 # mygpo (gPodder.net) for YunoHost
 
-[![Integration level](https://dash.yunohost.org/integration/mygpo.svg)](https://dash.yunohost.org/appci/app/mygpo) ![Working status](https://ci-apps.yunohost.org/ci/badges/mygpo.status.svg) ![Maintenance status](https://ci-apps.yunohost.org/ci/badges/mygpo.maintain.svg)
+[![Integration level](https://dash.yunohost.org/integration/mygpo.svg)](https://ci-apps.yunohost.org/ci/apps/mygpo/) ![Working status](https://ci-apps.yunohost.org/ci/badges/mygpo.status.svg) ![Maintenance status](https://ci-apps.yunohost.org/ci/badges/mygpo.maintain.svg)
 
 [![Install mygpo (gPodder.net) with YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=mygpo)
 
