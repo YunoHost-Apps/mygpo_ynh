@@ -5,7 +5,7 @@ EZ editatu eskuz.
 
 # mygpo (gPodder.net) YunoHost-erako
 
-[![Integrazio maila](https://dash.yunohost.org/integration/mygpo.svg)](https://dash.yunohost.org/appci/app/mygpo) ![Funtzionamendu egoera](https://ci-apps.yunohost.org/ci/badges/mygpo.status.svg) ![Mantentze egoera](https://ci-apps.yunohost.org/ci/badges/mygpo.maintain.svg)
+[![Integrazio maila](https://dash.yunohost.org/integration/mygpo.svg)](https://ci-apps.yunohost.org/ci/apps/mygpo/) ![Funtzionamendu egoera](https://ci-apps.yunohost.org/ci/badges/mygpo.status.svg) ![Mantentze egoera](https://ci-apps.yunohost.org/ci/badges/mygpo.maintain.svg)
 
 [![Instalatu mygpo (gPodder.net) YunoHost-ekin](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=mygpo)
 
