@@ -1,9 +1,5 @@
 #!/bin/bash
 
-#=================================================
-# IMPORT GENERIC HELPERS
-#=================================================
-
 source _common.sh
 source /usr/share/yunohost/helpers
 
@@ -22,7 +18,6 @@ ynh_app_setting_set --key="secret_key" --value="$secret_key"
 #=================================================
 ynh_script_progression "Setting up source files..."
 
-# Download, check integrity, uncompress and patch the source from app.src
 ynh_setup_source --dest_dir="$install_dir/sources"
 
 #=================================================
@@ -93,13 +88,9 @@ systemctl daemon-reload --quiet
 #=================================================
 ynh_script_progression "Starting $app's systemd services..."
 
-# Start systemd services
 ynh_systemctl --service="$app.socket" --action="start"
-
 ynh_systemctl --service="$app" --action="start"
-
 ynh_systemctl --service="$app-celery" --action="start"
-
 ynh_systemctl --service="$app-beat" --action="start"
 
 #=================================================

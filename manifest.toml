@@ -19,7 +19,7 @@ admindoc = "https://gpoddernet.readthedocs.io/"
 code = "https://github.com/gpodder/mygpo"
 
 [integration]
-yunohost = ">= 11.2.18"
+yunohost = ">= 11.2.30"
 helpers_version = "2.1"
 architectures = "all"
 multi_instance = false
@@ -84,7 +84,6 @@ ram.runtime = "100M"
         "redis-server",
         "libldap2-dev",
         "libsasl2-dev",
-
         "postgresql",
         "postgresql-contrib",
     ]

@@ -11,8 +11,8 @@ function set_permissions {
 	chown -R "$app:$app" "$data_dir"
 	setfacl -n -R -m u:www-data:rx -m d:u:www-data:rx "$data_dir"
 
-	#REMOVEME? Assuming the install dir is setup using ynh_setup_source, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chmod 750 "$install_dir"
-	#REMOVEME? Assuming the install dir is setup using ynh_setup_source, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chown -R "$app:$app" "$install_dir"
+	chmod 750 "$install_dir"
+	chown -R "$app:$app" "$install_dir"
 	setfacl -n -R -m user:www-data:rx -m default:user:www-data:rx "$install_dir"
 	setfacl -n -R -m user:www-data:- -m default:user:www-data:- "$install_dir/envs"
 }
@@ -30,7 +30,7 @@ function set_up_virtualenv {
 
 function collect_static {
 	pushd "$install_dir"
-		#REMOVEME? Assuming the install dir is setup using ynh_setup_source, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chown -R "$app:$app" "$install_dir"
+		chown -R "$app:$app" "$install_dir"
 		ynh_hide_warnings ynh_exec_as_app "$install_dir/venv/bin/envdir" "$env_path" "$install_dir/venv/bin/python" "$install_dir/sources/manage.py" collectstatic --noinput
 	popd
 }

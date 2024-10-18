@@ -1,9 +1,5 @@
 #!/bin/bash
 
-#=================================================
-# IMPORT GENERIC HELPERS
-#=================================================
-
 source _common.sh
 source /usr/share/yunohost/helpers
 
@@ -19,11 +15,8 @@ admin_email=$(ynh_user_get_info --username="$admin" --key="mail")
 ynh_script_progression "Stopping $app's systemd services..."
 
 ynh_systemctl --service="$app.socket" --action="stop"
-
 ynh_systemctl --service="$app" --action="stop"
-
 ynh_systemctl --service="$app-beat" --action="stop"
-
 ynh_systemctl --service="$app-celery" --action="stop"
 
 systemctl disable "$app.socket" --quiet
@@ -60,7 +53,6 @@ fi
 #=================================================
 ynh_script_progression "Upgrading source files..."
 
-# Download, check integrity, uncompress and patch the source from app.src
 ynh_setup_source --dest_dir="$install_dir/sources" --full_replace
 
 #=================================================
@@ -128,11 +120,8 @@ systemctl daemon-reload --quiet
 ynh_script_progression "Starting $app's systemd service..."
 
 ynh_systemctl --service="$app.socket" --action="start"
-
 ynh_systemctl --service="$app" --action="start"
-
 ynh_systemctl --service="$app-celery" --action="start"
-
 ynh_systemctl --service="$app-beat" --action="start"
 
 #=================================================
