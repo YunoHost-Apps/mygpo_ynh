@@ -7,7 +7,7 @@ name = "mygpo (gPodder.net)"
 description.en = "Manage podcast subscriptions, and sync them between apps and devices"
 description.fr = "Gérez vos sousciptions balado, et sychronisez-lez entre vos applis et appareils"
 
-version = "2.11.20221222~ynh2"
+version = "2024.11.08~ynh1"
 
 maintainers = ["Jules Bertholet"]
 
@@ -43,8 +43,8 @@ ram.runtime = "100M"
 
 [resources]
     [resources.sources.main]
-    url = "https://github.com/gpodder/mygpo/archive/80c41dc0c9a58dc0e85f6ef56662cdfd0d6e3b16.tar.gz"
-    sha256 = "cce51ef812e5a692ea38b82cb559a4982dcf76ad34d6adf73aff2c5299cb5573"
+    url = "https://github.com/gpodder/mygpo/archive/c99c8b875e74698d001ee0bf88e3afb8e3c80356.tar.gz"
+    sha256 = "a0589abed4aa759f9d7dd065b397bf1caf88fcf745bfd576c570759fa3071614"
 
     autoupdate.strategy = "latest_github_commit"
 
