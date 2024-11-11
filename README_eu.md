@@ -19,7 +19,7 @@ EZ editatu eskuz.
 This is the webservice powering the https://gpodder.net website. It can be used to sync podcast subscriptions with [supported clients](https://gpoddernet.readthedocs.io/en/latest/user/clients.html).
 
 
-**Paketatutako bertsioa:** 2.11.20221222~ynh2
+**Paketatutako bertsioa:** 2024.11.08~ynh1
 
 **Demoa:** <https://gpodder.net>
 

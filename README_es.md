@@ -19,7 +19,7 @@ No se debe editar a mano.
 This is the webservice powering the https://gpodder.net website. It can be used to sync podcast subscriptions with [supported clients](https://gpoddernet.readthedocs.io/en/latest/user/clients.html).
 
 
-**Versión actual:** 2.11.20221222~ynh2
+**Versión actual:** 2024.11.08~ynh1
 
 **Demo:** <https://gpodder.net>
 
@@ -37,7 +37,7 @@ This is the webservice powering the https://gpodder.net website. It can be used 
 
 ## Información para desarrolladores
 
-Por favor enviar sus correcciones a la [`branch testing`](https://github.com/YunoHost-Apps/mygpo_ynh/tree/testing
+Por favor enviar sus correcciones a la [rama `testing`](https://github.com/YunoHost-Apps/mygpo_ynh/tree/testing).
 
 Para probar la rama `testing`, sigue asÍ:
 
