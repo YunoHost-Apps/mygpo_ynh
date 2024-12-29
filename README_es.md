@@ -5,7 +5,9 @@ No se debe editar a mano.
 
 # mygpo (gPodder.net) para Yunohost
 
-[![Nivel de integración](https://dash.yunohost.org/integration/mygpo.svg)](https://ci-apps.yunohost.org/ci/apps/mygpo/) ![Estado funcional](https://ci-apps.yunohost.org/ci/badges/mygpo.status.svg) ![Estado En Mantención](https://ci-apps.yunohost.org/ci/badges/mygpo.maintain.svg)
+[![Nivel de integración](https://apps.yunohost.org/badge/integration/mygpo)](https://ci-apps.yunohost.org/ci/apps/mygpo/)
+![Estado funcional](https://apps.yunohost.org/badge/state/mygpo)
+![Estado En Mantención](https://apps.yunohost.org/badge/maintained/mygpo)
 
 [![Instalar mygpo (gPodder.net) con Yunhost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=mygpo)
 
@@ -19,7 +21,7 @@ No se debe editar a mano.
 This is the webservice powering the https://gpodder.net website. It can be used to sync podcast subscriptions with [supported clients](https://gpoddernet.readthedocs.io/en/latest/user/clients.html).
 
 
-**Versión actual:** 2.11.20221222~ynh2
+**Versión actual:** 2024.12.25~ynh1
 
 **Demo:** <https://gpodder.net>
 
@@ -37,7 +39,7 @@ This is the webservice powering the https://gpodder.net website. It can be used 
 
 ## Información para desarrolladores
 
-Por favor enviar sus correcciones a la [`branch testing`](https://github.com/YunoHost-Apps/mygpo_ynh/tree/testing
+Por favor enviar sus correcciones a la [rama `testing`](https://github.com/YunoHost-Apps/mygpo_ynh/tree/testing).
 
 Para probar la rama `testing`, sigue asÍ:
 
