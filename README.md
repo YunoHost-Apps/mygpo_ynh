@@ -5,7 +5,9 @@ It shall NOT be edited by hand.
 
 # mygpo (gPodder.net) for YunoHost
 
-[![Integration level](https://dash.yunohost.org/integration/mygpo.svg)](https://ci-apps.yunohost.org/ci/apps/mygpo/) ![Working status](https://ci-apps.yunohost.org/ci/badges/mygpo.status.svg) ![Maintenance status](https://ci-apps.yunohost.org/ci/badges/mygpo.maintain.svg)
+[![Integration level](https://apps.yunohost.org/badge/integration/mygpo)](https://ci-apps.yunohost.org/ci/apps/mygpo/)
+![Working status](https://apps.yunohost.org/badge/state/mygpo)
+![Maintenance status](https://apps.yunohost.org/badge/maintained/mygpo)
 
 [![Install mygpo (gPodder.net) with YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=mygpo)
 
@@ -19,7 +21,7 @@ It shall NOT be edited by hand.
 This is the webservice powering the https://gpodder.net website. It can be used to sync podcast subscriptions with [supported clients](https://gpoddernet.readthedocs.io/en/latest/user/clients.html).
 
 
-**Shipped version:** 2.11.20221222~ynh2
+**Shipped version:** 2024.12.25~ynh1
 
 **Demo:** <https://gpodder.net>
 
