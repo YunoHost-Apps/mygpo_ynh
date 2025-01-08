@@ -7,7 +7,7 @@ name = "mygpo (gPodder.net)"
 description.en = "Manage podcast subscriptions, and sync them between apps and devices"
 description.fr = "Gérez vos sousciptions balado, et sychronisez-lez entre vos applis et appareils"
 
-version = "2024.12.25~ynh1"
+version = "2024.12.25~ynh2"
 
 maintainers = ["Jules Bertholet"]
 

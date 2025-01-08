@@ -12,10 +12,10 @@ source /usr/share/yunohost/helpers
 #=================================================
 ynh_script_progression --message="Stopping $app's systemd services..." --weight=1
 
-ynh_systemd_action --service_name="$app-celery" --action="stop" --log_path="/var/log/$app/$app.log"
-ynh_systemd_action --service_name="$app-beat" --action="stop" --log_path="/var/log/$app/$app.log"
-ynh_systemd_action --service_name="$app.socket" --action="stop" --log_path="/var/log/$app/$app.log"
-ynh_systemd_action --service_name="$app" --action="stop" --log_path="/var/log/$app/$app.log"
+ynh_systemd_action --service_name="$app-celery" --action="stop" --log_path=systemd
+ynh_systemd_action --service_name="$app-beat" --action="stop" --log_path=systemd
+ynh_systemd_action --service_name="$app.socket" --action="stop" --log_path=systemd
+ynh_systemd_action --service_name="$app" --action="stop" --log_path=systemd
 
 #=================================================
 # MODIFY URL IN NGINX CONF
@@ -41,10 +41,10 @@ set_permissions
 #=================================================
 ynh_script_progression --message="Starting systemd services..." --weight=1
 
-ynh_systemd_action --service_name="$app.socket" --action="start" --log_path="/var/log/$app/$app.log"
-ynh_systemd_action --service_name="$app" --action="start" --log_path="/var/log/$app/$app.log"
-ynh_systemd_action --service_name="$app-celery" --action="start" --log_path="/var/log/$app/$app.log"
-ynh_systemd_action --service_name="$app-beat" --action="start" --log_path="/var/log/$app/$app.log"
+ynh_systemd_action --service_name="$app.socket" --action="start" --log_path=systemd --line_match="Listening on"
+ynh_systemd_action --service_name="$app" --action="start" --log_path=systemd
+ynh_systemd_action --service_name="$app-celery" --action="start" --log_path=systemd --line_match="ready."
+ynh_systemd_action --service_name="$app-beat" --action="start" --log_path=systemd --line_match="Starting..."
 
 #=================================================
 # END OF SCRIPT

@@ -18,10 +18,10 @@ admin_email=$(ynh_user_get_info --username="$admin" --key="mail")
 #=================================================
 ynh_script_progression --message="Stopping $app's systemd services..." --weight=1
 
-ynh_systemd_action --service_name="$app.socket" --action="stop" --log_path="/var/log/$app/$app.log"
-ynh_systemd_action --service_name="$app" --action="stop" --log_path="/var/log/$app/$app.log"
-ynh_systemd_action --service_name="$app-beat" --action="stop" --log_path="/var/log/$app/$app.log"
-ynh_systemd_action --service_name="$app-celery" --action="stop" --log_path="/var/log/$app/$app.log"
+ynh_systemd_action --service_name="$app.socket" --action="stop" --log_path=systemd
+ynh_systemd_action --service_name="$app" --action="stop" --log_path=systemd
+ynh_systemd_action --service_name="$app-beat" --action="stop" --log_path=systemd
+ynh_systemd_action --service_name="$app-celery" --action="stop" --log_path=systemd
 
 systemctl disable "$app.socket" --quiet
 systemctl disable "$app" --quiet
@@ -110,7 +110,7 @@ ynh_add_nginx_config
 
 # Create a dedicated systemd config
 ynh_add_systemd_config
-yunohost service add "$app" --description="Manage podcast subscriptions, and sync them between apps and devices" --log="/var/log/$app/$app.log"
+yunohost service add "$app" --description="Manage podcast subscriptions, and sync them between apps and devices" --log=systemd
 ynh_add_systemd_config --service="$app-celery" --template systemd-celery.service
 ynh_add_systemd_config --service="$app-beat" --template systemd-beat.service
 # Some workaround bc ynh_add_system_config doesn't know sockets
@@ -124,10 +124,10 @@ systemctl daemon-reload --quiet
 #=================================================
 ynh_script_progression --message="Starting $app's systemd service..." --weight=1
 
-ynh_systemd_action --service_name="$app.socket" --action="start" --log_path="/var/log/$app/$app.log"
-ynh_systemd_action --service_name="$app" --action="start" --log_path="/var/log/$app/$app.log"
-ynh_systemd_action --service_name="$app-celery" --action="start" --log_path="/var/log/$app/$app.log"
-ynh_systemd_action --service_name="$app-beat" --action="start" --log_path="/var/log/$app/$app.log"
+ynh_systemd_action --service_name="$app.socket" --action="start" --log_path=systemd --line_match="Listening on"
+ynh_systemd_action --service_name="$app" --action="start" --log_path=systemd
+ynh_systemd_action --service_name="$app-celery" --action="start" --log_path=systemd --line_match="ready."
+ynh_systemd_action --service_name="$app-beat" --action="start" --log_path=systemd --line_match="Starting..."
 
 #=================================================
 # END OF SCRIPT
