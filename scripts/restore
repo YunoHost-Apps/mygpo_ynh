@@ -60,17 +60,17 @@ systemctl enable "$app-celery" --quiet
 systemctl enable "$app-beat" --quiet
 systemctl enable "$app" --quiet
 systemctl enable "$app.socket" --quiet
-yunohost service add "$app" --description="Manage podcast subscriptions, and sync them between apps and devices" --log="/var/log/$app/$app.log"
+yunohost service add "$app" --description="Manage podcast subscriptions, and sync them between apps and devices" --log=systemd
 
 #=================================================
 # RELOAD NGINX AND PHP-FPM OR THE APP SERVICE
 #=================================================
 ynh_script_progression --message="Reloading NGINX web server and $app's service..." --weight=1
 
-ynh_systemd_action --service_name="$app.socket" --action="start" --log_path="/var/log/$app/$app.log"
-ynh_systemd_action --service_name="$app" --action="start" --log_path="/var/log/$app/$app.log"
-ynh_systemd_action --service_name="$app-celery" --action="start" --log_path="/var/log/$app/$app.log"
-ynh_systemd_action --service_name="$app-beat" --action="start" --log_path="/var/log/$app/$app.log"
+ynh_systemd_action --service_name="$app.socket" --action="start" --log_path=systemd --line_match="Listening on"
+ynh_systemd_action --service_name="$app" --action="start" --log_path=systemd --line_match="Started"
+ynh_systemd_action --service_name="$app-celery" --action="start" --log_path=systemd --line_match="ready."
+ynh_systemd_action --service_name="$app-beat" --action="start" --log_path=systemd --line_match="Starting..."
 
 ynh_systemd_action --service_name=nginx --action=reload
 
