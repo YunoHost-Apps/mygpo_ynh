@@ -5,7 +5,9 @@
 
 # YunoHost 上的 mygpo (gPodder.net)
 
-[![集成程度](https://dash.yunohost.org/integration/mygpo.svg)](https://ci-apps.yunohost.org/ci/apps/mygpo/) ![工作状态](https://ci-apps.yunohost.org/ci/badges/mygpo.status.svg) ![维护状态](https://ci-apps.yunohost.org/ci/badges/mygpo.maintain.svg)
+[![集成程度](https://apps.yunohost.org/badge/integration/mygpo)](https://ci-apps.yunohost.org/ci/apps/mygpo/)
+![工作状态](https://apps.yunohost.org/badge/state/mygpo)
+![维护状态](https://apps.yunohost.org/badge/maintained/mygpo)
 
 [![使用 YunoHost 安装 mygpo (gPodder.net)](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=mygpo)
 
@@ -19,7 +21,7 @@
 This is the webservice powering the https://gpodder.net website. It can be used to sync podcast subscriptions with [supported clients](https://gpoddernet.readthedocs.io/en/latest/user/clients.html).
 
 
-**分发版本：** 2.11.20221222~ynh2
+**分发版本：** 2025.01.09~ynh1
 
 **演示：** <https://gpodder.net>
 

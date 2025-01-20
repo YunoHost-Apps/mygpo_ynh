@@ -108,6 +108,7 @@ ynh_config_add_systemd
 yunohost service add "$app" --description="Manage podcast subscriptions, and sync them between apps and devices" --log="/var/log/$app/$app.log"
 ynh_config_add_systemd --service="$app-celery" --template systemd-celery.service
 ynh_config_add_systemd --service="$app-beat" --template systemd-beat.service
+
 # Some workaround bc ynh_add_system_config doesn't know sockets
 ynh_config_add_systemd --service="$app-socket" --template systemd.socket
 systemctl disable "$app-socket.service" --quiet

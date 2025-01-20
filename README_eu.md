@@ -5,7 +5,9 @@ EZ editatu eskuz.
 
 # mygpo (gPodder.net) YunoHost-erako
 
-[![Integrazio maila](https://dash.yunohost.org/integration/mygpo.svg)](https://ci-apps.yunohost.org/ci/apps/mygpo/) ![Funtzionamendu egoera](https://ci-apps.yunohost.org/ci/badges/mygpo.status.svg) ![Mantentze egoera](https://ci-apps.yunohost.org/ci/badges/mygpo.maintain.svg)
+[![Integrazio maila](https://apps.yunohost.org/badge/integration/mygpo)](https://ci-apps.yunohost.org/ci/apps/mygpo/)
+![Funtzionamendu egoera](https://apps.yunohost.org/badge/state/mygpo)
+![Mantentze egoera](https://apps.yunohost.org/badge/maintained/mygpo)
 
 [![Instalatu mygpo (gPodder.net) YunoHost-ekin](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=mygpo)
 
@@ -19,7 +21,7 @@ EZ editatu eskuz.
 This is the webservice powering the https://gpodder.net website. It can be used to sync podcast subscriptions with [supported clients](https://gpoddernet.readthedocs.io/en/latest/user/clients.html).
 
 
-**Paketatutako bertsioa:** 2.11.20221222~ynh2
+**Paketatutako bertsioa:** 2025.01.09~ynh1
 
 **Demoa:** <https://gpodder.net>
 
