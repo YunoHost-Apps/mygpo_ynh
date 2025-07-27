@@ -12,12 +12,16 @@ Manage podcast subscriptions, and sync them between apps and devices
 
 [![🌐 Official app website](https://img.shields.io/badge/Official_app_website-darkgreen?style=for-the-badge)](https://gpodder.net)
 [![App Demo](https://img.shields.io/badge/App_Demo-blue?style=for-the-badge)](https://gpodder.net)
-[![Version: 2025.04.18~ynh1](https://img.shields.io/badge/Version-2025.04.18~ynh1-rgba(0,150,0,1)?style=for-the-badge)](https://ci-apps.yunohost.org/ci/apps/mygpo/)
+[![Version: 2025.07.21~ynh1](https://img.shields.io/badge/Version-2025.07.21~ynh1-rgba(0,150,0,1)?style=for-the-badge)](https://ci-apps.yunohost.org/ci/apps/mygpo/)
 
 <div align="center">
 <a href="https://apps.yunohost.org/app/mygpo"><img height="100px" src="https://github.com/YunoHost/yunohost-artwork/raw/refs/heads/main/badges/neopossum-badges/badge_more_info_on_the_appstore.svg"/></a>
 <a href="https://github.com/YunoHost-Apps/mygpo_ynh/issues"><img height="100px" src="https://github.com/YunoHost/yunohost-artwork/raw/refs/heads/main/badges/neopossum-badges/badge_report_an_issue.svg"/></a>
 </div>
+
+
+## Screenshots
+![Screenshot of mygpo (gPodder.net)](./doc/screenshots/screenshot1.png)
 
 ## 📦 Developer info
 
