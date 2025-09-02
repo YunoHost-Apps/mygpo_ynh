@@ -23,6 +23,8 @@ function set_up_virtualenv {
 
 	ynh_hide_warnings ynh_exec_as_app python3 -m venv "$install_dir/venv"
 	ynh_hide_warnings ynh_exec_as_app "$install_dir/venv/bin/pip" --cache-dir "$install_dir/.cache/pip" install -U wheel pip --cache-dir "$install_dir/.cache/pip" setuptools
+	#pycparser doesn’t seem to be included but is needed
+	ynh_hide_warnings ynh_exec_as_app "$install_dir/venv/bin/pip" --cache-dir "$install_dir/.cache/pip" install -U pycparser
 	ynh_hide_warnings ynh_exec_as_app "$install_dir/venv/bin/pip" --cache-dir "$install_dir/.cache/pip" install -U --requirement "$install_dir/sources/requirements.txt"
 	ynh_hide_warnings ynh_exec_as_app "$install_dir/venv/bin/pip" --cache-dir "$install_dir/.cache/pip" install -U --requirement "$install_dir/sources/requirements-setup.txt"
 	ynh_hide_warnings ynh_exec_as_app "$install_dir/venv/bin/pip" --cache-dir "$install_dir/.cache/pip" install -U --requirement "$install_dir/requirements-ynh.txt"
