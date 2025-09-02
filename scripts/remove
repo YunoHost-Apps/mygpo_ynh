@@ -10,10 +10,10 @@ source /usr/share/yunohost/helpers
 #=================================================
 # REMOVE SYSTEM CONFIGURATIONS
 #=================================================
-ynh_script_progression --message="Removing system configurations related to $app..." --weight=1
+ynh_script_progression "Removing system configurations related to $app..."
 
 # Remove the service from the list of services known by YunoHost (added from `yunohost service add`)
-if ynh_exec_warn_less yunohost service status "$app" >/dev/null; then
+if ynh_hide_warnings yunohost service status "$app" >/dev/null; then
     yunohost service remove "$app"
 fi
 
@@ -23,22 +23,15 @@ systemctl disable "$app.socket" --quiet
 rm "/etc/systemd/system/$app.socket"
 systemctl daemon-reload --quiet
 
-ynh_remove_systemd_config
-ynh_remove_systemd_config -s "$app-celery"
-ynh_remove_systemd_config -s "$app-beat"
+ynh_config_remove_systemd
+ynh_config_remove_systemd -s "$app-celery"
+ynh_config_remove_systemd -s "$app-beat"
 
 # Remove the dedicated NGINX config
-ynh_remove_nginx_config
-
-#=================================================
-# REMOVE VARIOUS FILES
-#=================================================
-ynh_script_progression --message="Removing various files..."
-
-# Remove the log files
+ynh_config_remove_nginx
 
 #=================================================
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Removal of $app completed" --last
+ynh_script_progression "Removal of $app completed"

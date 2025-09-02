@@ -1,14 +1,10 @@
 #!/bin/bash
 
 #=================================================
-# COMMON VARIABLES
+# COMMON VARIABLES AND CUSTOM HELPERS
 #=================================================
 
 env_path="$install_dir/envs/prod"
-
-#=================================================
-# PERSONAL HELPERS
-#=================================================
 
 function set_permissions {
 	chmod 750 "$data_dir"
@@ -23,25 +19,25 @@ function set_permissions {
 
 function set_up_virtualenv {
 	mkdir -p "$env_path"
-	ynh_add_config --template="requirements-ynh.txt" --destination="$install_dir/requirements-ynh.txt"
+	ynh_config_add --template="requirements-ynh.txt" --destination="$install_dir/requirements-ynh.txt"
 
-	ynh_exec_warn_less ynh_exec_as "$app" python3 -m venv "$install_dir/venv"
-	ynh_exec_warn_less ynh_exec_as "$app" "$install_dir/venv/bin/pip" --cache-dir "$install_dir/.cache/pip" install -U wheel pip --cache-dir "$install_dir/.cache/pip" setuptools
-	ynh_exec_warn_less ynh_exec_as "$app" "$install_dir/venv/bin/pip" --cache-dir "$install_dir/.cache/pip" install -U --requirement "$install_dir/sources/requirements.txt"
-	ynh_exec_warn_less ynh_exec_as "$app" "$install_dir/venv/bin/pip" --cache-dir "$install_dir/.cache/pip" install -U --requirement "$install_dir/sources/requirements-setup.txt"
-	ynh_exec_warn_less ynh_exec_as "$app" "$install_dir/venv/bin/pip" --cache-dir "$install_dir/.cache/pip" install -U --requirement "$install_dir/requirements-ynh.txt"
+	ynh_hide_warnings ynh_exec_as_app python3 -m venv "$install_dir/venv"
+	ynh_hide_warnings ynh_exec_as_app "$install_dir/venv/bin/pip" --cache-dir "$install_dir/.cache/pip" install -U wheel pip --cache-dir "$install_dir/.cache/pip" setuptools
+	ynh_hide_warnings ynh_exec_as_app "$install_dir/venv/bin/pip" --cache-dir "$install_dir/.cache/pip" install -U --requirement "$install_dir/sources/requirements.txt"
+	ynh_hide_warnings ynh_exec_as_app "$install_dir/venv/bin/pip" --cache-dir "$install_dir/.cache/pip" install -U --requirement "$install_dir/sources/requirements-setup.txt"
+	ynh_hide_warnings ynh_exec_as_app "$install_dir/venv/bin/pip" --cache-dir "$install_dir/.cache/pip" install -U --requirement "$install_dir/requirements-ynh.txt"
 }
 
 function collect_static {
 	pushd "$install_dir"
 		chown -R "$app:$app" "$install_dir"
-		ynh_exec_warn_less ynh_exec_as "$app" "$install_dir/venv/bin/envdir" "$env_path" "$install_dir/venv/bin/python" "$install_dir/sources/manage.py" collectstatic --noinput
+		ynh_hide_warnings ynh_exec_as_app "$install_dir/venv/bin/envdir" "$env_path" "$install_dir/venv/bin/python" "$install_dir/sources/manage.py" collectstatic --noinput
 	popd
 }
 
 function initialize_db {
 	perform_db_migrations
-	ynh_exec_warn_less ynh_exec_as "$app" "$install_dir/venv/bin/envdir" "$env_path" "$install_dir/venv/bin/python" "$install_dir/sources/manage.py" createsuperuser --username "$admin" --email "$admin_email" --noinput -v 0
+	ynh_hide_warnings ynh_exec_as_app "$install_dir/venv/bin/envdir" "$env_path" "$install_dir/venv/bin/python" "$install_dir/sources/manage.py" createsuperuser --username "$admin" --email "$admin_email" --noinput -v 0
 }
 
 function upgrade_db {
@@ -49,14 +45,6 @@ function upgrade_db {
 }
 
 function perform_db_migrations {
-	yes | ynh_exec_warn_less ynh_exec_as "$app" "$install_dir/venv/bin/envdir" "$env_path" "$install_dir/venv/bin/python" "$install_dir/sources/manage.py" makemigrations --merge
-	ynh_exec_warn_less ynh_exec_as "$app" "$install_dir/venv/bin/envdir" "$env_path" "$install_dir/venv/bin/python" "$install_dir/sources/manage.py" migrate
+	yes | ynh_hide_warnings ynh_exec_as_app "$install_dir/venv/bin/envdir" "$env_path" "$install_dir/venv/bin/python" "$install_dir/sources/manage.py" makemigrations --merge
+	ynh_hide_warnings ynh_exec_as_app "$install_dir/venv/bin/envdir" "$env_path" "$install_dir/venv/bin/python" "$install_dir/sources/manage.py" migrate
 }
-
-#=================================================
-# EXPERIMENTAL HELPERS
-#=================================================
-
-#=================================================
-# FUTURE OFFICIAL HELPERS
-#=================================================
