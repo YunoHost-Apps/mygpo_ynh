@@ -3,7 +3,3 @@
 test_format = 1.0
 
 [default]
-
-    #test_upgrade_from.46990410c80669094c6feb34a843e02295f3eb73.name = "Last packagingv1 version"
-    test_upgrade_from.7b24cbbd6a7c3c654326b3f582e82f7e19daca9f.name = "2025.02.02~ynh1"
-    test_upgrade_from.b2bed2400cd8f97050ea19f95270a272e548b1ec.name = "Helpers v1"
