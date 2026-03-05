@@ -28,6 +28,11 @@ function set_up_virtualenv {
 	ynh_hide_warnings ynh_exec_as_app "$install_dir/venv/bin/pip" --cache-dir "$install_dir/.cache/pip" install -U --requirement "$install_dir/sources/requirements.txt"
 	ynh_hide_warnings ynh_exec_as_app "$install_dir/venv/bin/pip" --cache-dir "$install_dir/.cache/pip" install -U --requirement "$install_dir/sources/requirements-setup.txt"
 	ynh_hide_warnings ynh_exec_as_app "$install_dir/venv/bin/pip" --cache-dir "$install_dir/.cache/pip" install -U --requirement "$install_dir/requirements-ynh.txt"
+
+	if [[ $YNH_DEBIAN_VERSION == "trixie" ]]
+	then
+	ynh_hide_warnings ynh_exec_as_app "$install_dir/venv/bin/pip" --cache-dir "$install_dir/.cache/pip" install -U legacy-cgi
+	fi
 }
 
 function collect_static {
